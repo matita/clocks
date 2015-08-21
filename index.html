@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clocks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <style>
+    * { margin: 0; padding: 0; }
+
+   /*body {
+      background: #eee;
+    }*/
+
+    .main {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .clock {
+      box-sizing: border-box;
+      display: inline-block;
+      padding: 1em;
+      /*background: #fff;
+      box-shadow: 0 2px 2px rgba(0,0,0,.3);*/
+      font-size: 2em;
+    }
+
+    .clock:before, .clock:after {
+      display: block;
+      font-size: .5em;
+      color: #999;
+    }
+
+    .clock:before {
+      content: attr(data-name);
+    }
+
+    .clock:after {
+      content: attr(data-city) ' UTC ' attr(data-timezone);
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="clock"></div><div class="clock" data-city="local" data-timezone="+2"></div><div class="clock" data-city="Miami" data-timezone="-5"></div><div class="clock" data-city="Miami" data-timezone="-5"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script>
+    var clocks = [
+      {
+        name: 'UTC',
+        city: '',
+        timezone: 0
+      }, {
+        name: 'Local',
+        city: 'Local',
+        timezone: 2
+      }, {
+        name: 'Someone',
+        city: 'Miami',
+        timezone: -4
+      }
+    ];
+
+
+
+    setClocks();
+    updateClocks();
+    setInterval(updateClocks, 1000);
+
+
+    function setClocks() {
+      $('.main').html(clocks.map(function(clock) {
+        return '<div class="clock" data-name="' + (clock.name || '') + '" data-city="' + (clock.city || '') + '" data-timezone="' + (clock.timezone || '') + '"></div>';
+      }));
+    }
+
+
+    function updateClocks() {
+      var utc = new Date(),
+        clocks = document.querySelectorAll('.clock'),
+        clock, d;
+
+      utc.setMinutes(utc.getMinutes() + utc.getTimezoneOffset());
+
+      $('.clock').each(function() {
+        var clock = $(this);
+        d = new Date(utc.getTime());
+        d.setHours(d.getHours() + (+clock.attr('data-timezone') || 0));
+        clock.html(pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()));
+      });
+
+    }
+
+    function pad(text) {
+      return ('0' + text).substr(-2);
+    }
+  </script>
+</body>
+</html>
