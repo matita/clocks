@@ -72,7 +72,11 @@
 
     function setClocks() {
       $('.main').html(clocks.map(function(clock) {
-        return '<div class="clock" data-name="' + (clock.name || '') + '" data-city="' + (clock.city || '') + '" data-timezone="' + (clock.timezone || '') + '"></div>';
+        return $('<div>', {
+          'data-name': clock.name || '',
+          'data-city': clock.city || '',
+          'data-timezone': clock.timezone || 0
+        }).addClass('clock');
       }));
     }
 
