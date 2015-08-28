@@ -28,19 +28,55 @@
       font-size: 2em;
     }
 
-    .clock:before, .clock:after {
+    .clock + .clock {
+      border-top: 1px solid #eee;
+    }
+
+    /*.clock:before, .clock:after, */
+    .clock-name, .clock-city {
       display: block;
       font-size: .5em;
       color: #999;
     }
 
-    .clock:before {
-      content: attr(data-name);
+    .clock-actions {
+      position: relative;
+      display: none;
+      background: #eee;
+      box-shadow: 0 2px 2px rgba(0,0,0,.4) inset;
+      border-radius: 1em;
+      font-size: .8em;
+      margin: 1em;
+      padding: 1em;
+    }
+
+    input[name="clock-actions"] {
+      display: none;
+    }
+
+    input[name="clock-actions"]:checked + .clock-actions {
+      display: block;
+    }
+
+    .clock-action {
+      padding: .4em;
+    }
+
+    .clock-action-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      cursor: pointer;
+      padding: .5em;
+    }
+
+    /*.clock:before {
+      content: attr(data-name) '<br>' attr(data-city);
     }
 
     .clock:after {
       content: attr(data-city) ' UTC ' attr(data-timezone);
-    }
+    }*/
 
     .search-text {
       font-size: 1.2em;
@@ -66,6 +102,12 @@
     .search-result-city {
       padding: 1em;
     }
+
+    .search-result-city:hover,
+    .clock-action:hover {
+      background: rgba(0,0,0,.2);
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -75,13 +117,32 @@
       <div class="search-results"></div>
     </div>
 
+    <input type="radio" id="no-clock" name="clock-actions">
     <div class="clocks"></div>
   </div>
+
+
+  <script id="clock-tmpl" type="text/html">
+    <div class="clock">
+      <label for="{{name}}">
+        <div class="clock-name">{{name}}</div>
+        <div class="clock-city">{{city}}</div>
+        <div class="clock-time"></div>
+      </label>
+
+      <input type="radio" id="{{name}}" name="clock-actions">
+      <div class="clock-actions">
+        <div class="clock-action clock-action-rename">Rename</div>
+        <div class="clock-action clock-action-delete">Delete</div>
+        <div class="clock-action-close"><label for="no-clock">&times;</label></div>
+      </div>
+    </div>
+  </script>
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script>
     var clocks = [
-      {
+      /*{
         name: 'UTC',
         city: '',
         timezone: 0
@@ -93,15 +154,22 @@
         name: 'Someone',
         city: 'Miami',
         timezone: -4
-      }
+      }*/
     ];
+
+    var Tmpl = {
+      clock: tmpl($('#clock-tmpl').html())
+    };
 
 
 
     $('.search-text').on('keyup', searchCities);
     $('.search-results').on('click', '.search-result-city', onCityClick);
+    $('.clocks')
+      .on('click', '.clock-action-rename', onClockRenameClick)
+      .on('click', '.clock-action-delete', onClockDeleteClick);
+    loadClocks();
     setClocks();
-    updateClocks();
     setInterval(updateClocks, 1000);
 
 
@@ -136,47 +204,98 @@
           timestamp: Math.round(new Date().getTime() / 1000),
           sensor: false
         }, function(response) {
+          
           clocks.push({
             name: '---',
             city: cityName,
+            lat: location.lat,
+            lng: location.lng,
             timezone: (response.rawOffset / 3600) + (response.dstOffset / 3600)
           });
 
           setClocks();
+
         });
       });
     }
 
 
+    function onClockRenameClick() {
+      var clock = $(this).closest('.clock').data('obj');
+      clock.name = prompt('Rename clock', clock.name);
+      setClocks();
+    }
+
+
+    function onClockDeleteClick() {
+      var clock = $(this).closest('.clock').data('obj');
+
+      if (confirm('Are you sure you want to delete "' + clock.name + '"?')) {
+        var i = clocks.indexOf(clock);
+        if (i >= 0) {
+          clocks.splice(i, 1);
+          setClocks();
+        }
+      }
+    }
+
+
     function setClocks() {
-      $('.clocks').html(clocks.map(function(clock) {
-        return $('<div>', {
-          'data-name': clock.name || '',
-          'data-city': clock.city || '',
-          'data-timezone': clock.timezone || 0
-        }).addClass('clock');
-      }));
+      $('.clocks').html([getLocalClock()].concat(clocks).map(Tmpl.clock));
+      saveClocks();
+      updateClocks();
     }
 
 
     function updateClocks() {
       var utc = new Date(),
-        clocks = document.querySelectorAll('.clock'),
         clock, d;
 
       utc.setMinutes(utc.getMinutes() + utc.getTimezoneOffset());
+      utc = utc.getTime();
 
       $('.clock').each(function() {
-        var clock = $(this);
-        d = new Date(utc.getTime());
-        d.setHours(d.getHours() + (+clock.attr('data-timezone') || 0));
-        clock.html(pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()));
+        var $clock = $(this),
+          clock = $clock.data('obj'),
+          offset = clock.timezone;
+
+        d = new Date(utc);
+        d.setHours(d.getHours() + (offset || 0));
+        $clock.find('.clock-time').html(pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()))
       });
 
     }
 
+
+    function getLocalClock() {
+      return {
+        name: 'Local',
+        city: '',
+        timezone: -(new Date().getTimezoneOffset() / 60)
+      };
+    }
+
+
+    function loadClocks() {
+      if (window.localStorage)
+        clocks = JSON.parse(localStorage.getItem('clocks') || '[]');
+    }
+
+    function saveClocks() {
+      if (window.localStorage)
+        localStorage.setItem('clocks', JSON.stringify(clocks));
+    }
+
     function pad(text) {
       return ('0' + text).substr(-2);
+    }
+
+    function tmpl(tmplText) {
+      return function(obj) {
+        return $(tmplText.replace(/\{\{(\w+)\}\}/g, function(match, key) {
+          return obj[key] || '';
+        })).data('obj', obj);
+      }
     }
   </script>
 </body>
