@@ -55,13 +55,13 @@
       outline: none;
     }
 
-    .search-results {
+    /*.search-results {
       display: none;
     }
 
     .search-text:focus + .search-results {
       display: block;
-    }
+    }*/
 
     .search-result-city {
       padding: 1em;
@@ -99,18 +99,52 @@
 
 
     $('.search-text').on('keyup', searchCities);
+    $('.search-results').on('click', '.search-result-city', onCityClick);
     setClocks();
     updateClocks();
     setInterval(updateClocks, 1000);
 
 
     function searchCities() {
-      var text = $('.search-text').val();
-      $.getJSON('http://gd.geobytes.com/AutoCompleteCity?callback=?', { q: text }, function(cities) {
-        $('.search-results').html(cities.map(function(city) {
-          return '<div class="search-result-city">' + city + '</div>';
-        }));
-      })
+      var text = $('.search-text').val().replace(/^\s*(.*?)\s*$/, '$1');
+      if (text) {
+        $.getJSON('http://gd.geobytes.com/AutoCompleteCity?callback=?', { q: text }, function(cities) {
+          $('.search-results').html(cities.map(function(city) {
+            return '<div class="search-result-city">' + city + '</div>';
+          }));
+        });
+      } else {
+        $('.search-results').empty();
+      }
+    }
+
+
+    function onCityClick() {
+      var cityName = $(this).text();
+
+      $('.search-text').val('');
+      $('.search-results').empty();
+
+      $.get('http://maps.googleapis.com/maps/api/geocode/json', {
+        address: cityName,
+        sensor: false
+      }, function(response) {
+        var location = response.results[0].geometry.location;
+
+        $.get('https://maps.googleapis.com/maps/api/timezone/json', {
+          location: location.lat + ',' + location.lng,
+          timestamp: Math.round(new Date().getTime() / 1000),
+          sensor: false
+        }, function(response) {
+          clocks.push({
+            name: '---',
+            city: cityName,
+            timezone: (response.rawOffset / 3600) + (response.dstOffset / 3600)
+          });
+
+          setClocks();
+        });
+      });
     }
 
 
