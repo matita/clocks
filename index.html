@@ -32,6 +32,10 @@
       border-top: 1px solid #eee;
     }
 
+    .clock-local {
+      background: rgba(0,0,0,.04);
+    }
+
     /*.clock:before, .clock:after, */
     .clock-name, .clock-city {
       display: block;
@@ -123,7 +127,7 @@
 
 
   <script id="clock-tmpl" type="text/html">
-    <div class="clock">
+    <div class="clock {{cls}}">
       <label for="{{name}}">
         <div class="clock-name">{{name}}</div>
         <div class="clock-city">{{city}}</div>
@@ -241,7 +245,12 @@
 
 
     function setClocks() {
-      $('.clocks').html([getLocalClock()].concat(clocks).map(Tmpl.clock));
+      $('.clocks').html(
+        [getLocalClock()]
+          .concat(clocks)
+          .sort(compareClocks)
+          .map(Tmpl.clock)
+      );
       saveClocks();
       updateClocks();
     }
@@ -261,7 +270,7 @@
 
         d = new Date(utc);
         d.setHours(d.getHours() + (offset || 0));
-        $clock.find('.clock-time').html(pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()))
+        $clock.find('.clock-time').html(pad(d.getHours()) + ':' + pad(d.getMinutes())/* + ':' + pad(d.getSeconds())*/);
       });
 
     }
@@ -271,8 +280,14 @@
       return {
         name: 'Local',
         city: '',
-        timezone: -(new Date().getTimezoneOffset() / 60)
+        timezone: -(new Date().getTimezoneOffset() / 60),
+        cls: 'clock-local'
       };
+    }
+
+
+    function compareClocks(clock1, clock2) {
+      return clock1.timezone - clock2.timezone;
     }
 
 
