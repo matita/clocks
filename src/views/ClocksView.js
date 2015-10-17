@@ -1,3 +1,5 @@
+var util = require('util');
+var EventEmitter = require('events').EventEmitter;
 var tmpl = require('../utils/tmpl.js');
 var Clock = require('../models/Clock.js');
 
@@ -6,9 +8,11 @@ var Tmpl = {
 };
 
 
+util.inherits(ClocksView, EventEmitter);
+
 function ClocksView($view) {
   var me = this;
-  var clocks = [];
+  var clocks = me.clocks = [];
 
   $view
     .on('click', '.clock-action-rename', onClockRenameClick)
@@ -16,19 +20,21 @@ function ClocksView($view) {
 
 
   me.addClock = function(clock) {
+    if (clocks.some(function(c) { return c.city == clock.city; }))
+      return;
     clocks.push(clock);
     setClocks();
+    me.emit('clockadded', clock);
   };
 
 
   function setClocks() {
     $view.html(
       [getLocalClock()]
-        .concat(clocks)
-        .sort(compareClocks)
+        .concat(clocks.sort(compareClocks))
         .map(Tmpl.clock)
     );
-    saveClocks();
+    //saveClocks();
     updateClocks();
   }
 
@@ -55,6 +61,7 @@ function ClocksView($view) {
     var clock = $(this).closest('.clock').data('obj');
     clock.name = prompt('Rename clock', clock.name);
     setClocks();
+    me.emit('clockrenamed', clock);
   }
 
 
@@ -66,6 +73,7 @@ function ClocksView($view) {
       if (i >= 0) {
         clocks.splice(i, 1);
         setClocks();
+        me.emit('clockremoved', clock);
       }
     }
   }
@@ -119,7 +127,7 @@ function ClocksView($view) {
   }
 
 
-  loadClocks();
+  //loadClocks();
   setClocks();
   setInterval(updateClocks, 1000);
 }

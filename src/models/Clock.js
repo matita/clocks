@@ -11,6 +11,8 @@ module.exports = function(opts) {
   for (var p in opts)
     me[p] = opts[p];
 
+  me.id = me.city.toLowerCase().replace(/\W+/g, '-');
+
   
   
   me.getLocation = function(callback) {
