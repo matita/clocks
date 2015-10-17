@@ -15,13 +15,15 @@
     }*/
 
     .main {
-      max-width: 800px;
+      max-width: 600px;
       margin: 0 auto;
-      text-align: center;
+      /*text-align: center;*/
     }
 
     .clock {
       /*display: inline-block;*/
+      float: left;
+      width: 100%;
       padding: .5em;
       /*background: #fff;
       box-shadow: 0 2px 2px rgba(0,0,0,.3);*/
@@ -34,6 +36,11 @@
 
     .clock-local {
       background: rgba(0,0,0,.04);
+    }
+
+    .clock-time {
+      float: left;
+      margin-right: .5em;
     }
 
     /*.clock:before, .clock:after, */
@@ -129,9 +136,9 @@
   <script id="clock-tmpl" type="text/html">
     <div class="clock {{cls}}">
       <label for="{{name}}">
+        <div class="clock-time"></div>
         <div class="clock-name">{{name}}</div>
         <div class="clock-city">{{city}}</div>
-        <div class="clock-time"></div>
       </label>
 
       <input type="radio" id="{{name}}" name="clock-actions">

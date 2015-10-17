@@ -1,6 +1,6 @@
-var cities = require('./models/cities.js');
 var Clock = require('./models/Clock.js');
 var tmpl = require('./utils/tmpl.js');
+var SearchCitiesView = require('./views/SearchCitiesView.js');
 
 var clocks = [
   /*{
@@ -23,9 +23,10 @@ var Tmpl = {
 };
 
 
+var citiesView = new SearchCitiesView($('.search-form'))
+  .on('cityselected', onCitySelected);
 
-$('.search-text').on('keyup', searchCities);
-$('.search-results').on('click', '.search-result-city', onCityClick);
+
 $('.clocks')
   .on('click', '.clock-action-rename', onClockRenameClick)
   .on('click', '.clock-action-delete', onClockDeleteClick);
@@ -34,29 +35,10 @@ setClocks();
 setInterval(updateClocks, 1000);
 
 
-function searchCities() {
-  var text = $('.search-text').val().replace(/^\s*(.*?)\s*$/, '$1');
-  if (text) {
-    cities.search(text, function(results) {
-      $('.search-results').html(results.map(function(city) {
-        return '<div class="search-result-city">' + city + '</div>';
-      }));
-    });
-  } else {
-    $('.search-results').empty();
-  }
-}
 
-
-function onCityClick() {
-  var cityName = $(this).text();
-
-  $('.search-text').val('');
-  $('.search-results').empty();
-
+function onCitySelected(cityName) {
   var clock = new Clock(cityName);
   clock.getTimezone(function() {
-    //clock.name = '---';
     clocks.push(clock);
     setClocks();
   });
