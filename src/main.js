@@ -1,4 +1,5 @@
 var cities = require('./models/cities.js');
+var Clock = require('./models/Clock.js');
 var tmpl = require('./utils/tmpl.js');
 
 var clocks = [
@@ -53,8 +54,9 @@ function onCityClick() {
   $('.search-text').val('');
   $('.search-results').empty();
 
-  cities.getClock(cityName, function(clock) {
-    clock.name = '---';
+  var clock = new Clock(cityName);
+  clock.getTimezone(function() {
+    //clock.name = '---';
     clocks.push(clock);
     setClocks();
   });
@@ -105,8 +107,7 @@ function updateClocks() {
       clock = $clock.data('obj'),
       offset = clock.timezone;
 
-    d = new Date(utc);
-    d.setHours(d.getHours() + (offset || 0));
+    d = clock.getDate(utc);
     $clock.find('.clock-time').html(pad(d.getHours()) + ':' + pad(d.getMinutes())/* + ':' + pad(d.getSeconds())*/);
   });
 
@@ -114,12 +115,12 @@ function updateClocks() {
 
 
 function getLocalClock() {
-  return {
+  return new Clock({
     name: 'Local',
     city: '',
     timezone: -(new Date().getTimezoneOffset() / 60),
     cls: 'clock-local'
-  };
+  });
 }
 
 
@@ -129,8 +130,25 @@ function compareClocks(clock1, clock2) {
 
 
 function loadClocks() {
-  if (window.localStorage)
-    clocks = JSON.parse(localStorage.getItem('clocks') || '[]');
+  if (!window.localStorage)
+    return;
+
+  var cities = JSON.parse(localStorage.getItem('clocks') || '[]');
+  processCity();
+
+
+  function processCity() {
+    if (!cities.length)
+      return;
+
+    var opts = cities.shift();
+    var clock = new Clock(opts);
+    //clock.getTimezone(function() {
+      clocks.push(clock);
+      setClocks();
+      processCity();
+    //});
+  }
 }
 
 function saveClocks() {

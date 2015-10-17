@@ -1,5 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var cities = require('./models/cities.js');
+var Clock = require('./models/Clock.js');
 var tmpl = require('./utils/tmpl.js');
 
 var clocks = [
@@ -54,8 +55,9 @@ function onCityClick() {
   $('.search-text').val('');
   $('.search-results').empty();
 
-  cities.getClock(cityName, function(clock) {
-    clock.name = '---';
+  var clock = new Clock(cityName);
+  clock.getTimezone(function() {
+    //clock.name = '---';
     clocks.push(clock);
     setClocks();
   });
@@ -106,8 +108,7 @@ function updateClocks() {
       clock = $clock.data('obj'),
       offset = clock.timezone;
 
-    d = new Date(utc);
-    d.setHours(d.getHours() + (offset || 0));
+    d = clock.getDate(utc);
     $clock.find('.clock-time').html(pad(d.getHours()) + ':' + pad(d.getMinutes())/* + ':' + pad(d.getSeconds())*/);
   });
 
@@ -115,12 +116,12 @@ function updateClocks() {
 
 
 function getLocalClock() {
-  return {
+  return new Clock({
     name: 'Local',
     city: '',
     timezone: -(new Date().getTimezoneOffset() / 60),
     cls: 'clock-local'
-  };
+  });
 }
 
 
@@ -130,8 +131,25 @@ function compareClocks(clock1, clock2) {
 
 
 function loadClocks() {
-  if (window.localStorage)
-    clocks = JSON.parse(localStorage.getItem('clocks') || '[]');
+  if (!window.localStorage)
+    return;
+
+  var cities = JSON.parse(localStorage.getItem('clocks') || '[]');
+  processCity();
+
+
+  function processCity() {
+    if (!cities.length)
+      return;
+
+    var opts = cities.shift();
+    var clock = new Clock(opts);
+    //clock.getTimezone(function() {
+      clocks.push(clock);
+      setClocks();
+      processCity();
+    //});
+  }
 }
 
 function saveClocks() {
@@ -144,42 +162,74 @@ function pad(text) {
 }
 
 
-},{"./models/cities.js":2,"./utils/tmpl.js":3}],2:[function(require,module,exports){
+},{"./models/Clock.js":2,"./models/cities.js":3,"./utils/tmpl.js":4}],2:[function(require,module,exports){
+module.exports = function(opts) {
+  var me = this;
+  var date = new Date();
+
+  me.name = '---';
+  me.city = null;
+
+  if (typeof(opts) == 'string')
+    opts = { city: opts };
+
+  for (var p in opts)
+    me[p] = opts[p];
+
+  
+  
+  me.getLocation = function(callback) {
+    $.get('http://maps.googleapis.com/maps/api/geocode/json', {
+      address: me.city,
+      sensor: false
+    }, function(response) {
+      var location = response.results[0].geometry.location;
+      me.lat = location.lat;
+      me.lng = location.lng;
+
+      if (callback)
+        callback();
+    });
+  };
+
+
+  me.getTimezone = function(callback) {
+
+    if (!me.lat || !me.lng)
+      return me.getLocation(function() {
+        me.getTimezone(callback);
+      });
+
+    $.get('https://maps.googleapis.com/maps/api/timezone/json', {
+        location: me.lat + ',' + me.lng,
+        timestamp: Math.round(new Date().getTime() / 1000),
+        sensor: false
+      }, function(response) {
+        me.timezone = (response.rawOffset / 3600) + (response.dstOffset / 3600);
+
+        if (callback)
+          callback();
+      });
+  };
+
+
+  me.getDate = function(utcMs) {
+    date.setTime(utcMs);
+    date.setHours(date.getHours() + (me.timezone || 0));
+    return date;
+  };
+};
+},{}],3:[function(require,module,exports){
 module.exports = {
   
   search: function(text, callback) {
     $.getJSON('http://gd.geobytes.com/AutoCompleteCity?callback=?', { q: text }, function(cities) {
       callback(cities);
     });
-  },
-
-  
-  getClock: function(cityName, callback) {
-    $.get('http://maps.googleapis.com/maps/api/geocode/json', {
-      address: cityName,
-      sensor: false
-    }, function(response) {
-      var location = response.results[0].geometry.location;
-
-      $.get('https://maps.googleapis.com/maps/api/timezone/json', {
-        location: location.lat + ',' + location.lng,
-        timestamp: Math.round(new Date().getTime() / 1000),
-        sensor: false
-      }, function(response) {
-        
-        callback({
-          name: '---',
-          city: cityName,
-          lat: location.lat,
-          lng: location.lng,
-          timezone: (response.rawOffset / 3600) + (response.dstOffset / 3600)
-        });
-
-      });
-    });
   }
+
 };
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 module.exports = function(tmplText) {
   return function(obj) {
     return $(tmplText.replace(/\{\{(\w+)\}\}/g, function(match, key) {

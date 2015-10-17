@@ -1,12 +1,21 @@
-module.exports = function(cityName) {
+module.exports = function(opts) {
   var me = this;
+  var date = new Date();
 
-  me.city = cityName;
+  me.name = '---';
+  me.city = null;
 
+  if (typeof(opts) == 'string')
+    opts = { city: opts };
+
+  for (var p in opts)
+    me[p] = opts[p];
+
+  
   
   me.getLocation = function(callback) {
     $.get('http://maps.googleapis.com/maps/api/geocode/json', {
-      address: cityName,
+      address: me.city,
       sensor: false
     }, function(response) {
       var location = response.results[0].geometry.location;
@@ -22,7 +31,9 @@ module.exports = function(cityName) {
   me.getTimezone = function(callback) {
 
     if (!me.lat || !me.lng)
-      return me.getLocation(me.getTimezone);
+      return me.getLocation(function() {
+        me.getTimezone(callback);
+      });
 
     $.get('https://maps.googleapis.com/maps/api/timezone/json', {
         location: me.lat + ',' + me.lng,
@@ -34,5 +45,12 @@ module.exports = function(cityName) {
         if (callback)
           callback();
       });
+  };
+
+
+  me.getDate = function(utcMs) {
+    date.setTime(utcMs);
+    date.setHours(date.getHours() + (me.timezone || 0));
+    return date;
   };
 };
