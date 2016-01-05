@@ -5,10 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
       font-family: Georgia, serif;
       font-size: 1.2em;
       color: #333;
+    }
+
+    a {
+      color: #6a9fb5;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
 
     .main {
@@ -17,7 +27,6 @@
     }
 
     .clock {
-      float: left;
       width: 100%;
       padding: .5em;
       font-size: 2em;
@@ -117,6 +126,18 @@
       background: rgba(0,0,0,.2);
       cursor: pointer;
     }
+
+    .footer {
+      margin-top: 2em;
+      border-top: 1px solid #eee;
+      font-size: .8em;
+      color: #ccc;
+      text-align: center;
+    }
+
+    .footer p {
+      margin: .8em;
+    }
   </style>
 </head>
 <body>
@@ -128,6 +149,12 @@
 
     <input type="radio" id="no-clock" name="clock-actions">
     <div class="clocks"></div>
+  </div>
+
+  <div class="footer">
+    <p>Fork it on <a href="https://github.com/matita/clocks/">GitHub</a></p>
+    <p>Need a feature? Found a bug? <a href="https://github.com/matita/clocks/issues">File an issue</a>!</p>
+    <p>Made by <a href="http://matita.github.io/2015/10/17/clocks/">Matita</a></p>
   </div>
 
 
