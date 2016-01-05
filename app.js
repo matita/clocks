@@ -421,7 +421,7 @@ process.umask = function() { return 0; };
 
 },{}],4:[function(require,module,exports){
 (function (global){
-/*! https://mths.be/punycode v1.3.2 by @mathias */
+/*! https://mths.be/punycode v1.4.0 by @mathias */
 ;(function(root) {
 
 	/** Detect free variables */
@@ -487,7 +487,7 @@ process.umask = function() { return 0; };
 	 * @returns {Error} Throws a `RangeError` with the applicable error message.
 	 */
 	function error(type) {
-		throw RangeError(errors[type]);
+		throw new RangeError(errors[type]);
 	}
 
 	/**
@@ -634,7 +634,7 @@ process.umask = function() { return 0; };
 
 	/**
 	 * Bias adaptation function as per section 3.4 of RFC 3492.
-	 * http://tools.ietf.org/html/rfc3492#section-3.4
+	 * https://tools.ietf.org/html/rfc3492#section-3.4
 	 * @private
 	 */
 	function adapt(delta, numPoints, firstTime) {
@@ -939,14 +939,17 @@ process.umask = function() { return 0; };
 			return punycode;
 		});
 	} else if (freeExports && freeModule) {
-		if (module.exports == freeExports) { // in Node.js or RingoJS v0.8.0+
+		if (module.exports == freeExports) {
+			// in Node.js, io.js, or RingoJS v0.8.0+
 			freeModule.exports = punycode;
-		} else { // in Narwhal or RingoJS v0.7.0-
+		} else {
+			// in Narwhal or RingoJS v0.7.0-
 			for (key in punycode) {
 				punycode.hasOwnProperty(key) && (freeExports[key] = punycode[key]);
 			}
 		}
-	} else { // in Rhino or a web browser
+	} else {
+		// in Rhino or a web browser
 		root.punycode = punycode;
 	}
 
@@ -2708,33 +2711,28 @@ util.inherits(SearchCitiesView, EventEmitter);
 function SearchCitiesView($view) {
   var me = this;
   var $searchText = $view.find('.search-text');
-  var $results = $view.find('.search-results');
+  var autocomplete;
 
-  $searchText.on('keyup', search);
-  $results.on('click', '.search-result-city', onCityClick);
+  $searchText
+    .on('keyup', onKeyPress)
+    .on('focus', function() { $(this).select(); });
+
+  google.maps.event.addDomListener(window, 'load', function() {
+    autocomplete = new google.maps.places.Autocomplete(
+      $searchText[0],
+      { types: ['geocode'] }
+    );
+  });
 
 
-  function search() {
-    var text = $searchText.val().replace(/^\s*(.*?)\s*$/, '$1');
-    if (text) {
-      cities.search(text, function(results) {
-        $results.html(results.map(function(city) {
-          return '<div class="search-result-city">' + city + '</div>';
-        }));
-      });
-    } else {
-      $results.empty();
+  function onKeyPress(e) {
+    if (e.which == 13) {
+      var cityName = $searchText.val();
+      setTimeout(function() {
+        $searchText.val('');
+      }, 100);
+      me.emit('cityselected', cityName);
     }
-  }
-
-
-  function onCityClick() {
-    var cityName = $(this).text();
-
-    $('.search-text').val('');
-    $('.search-results').empty();
-
-    me.emit('cityselected', cityName);
   }
 }
 

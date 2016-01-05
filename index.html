@@ -88,25 +88,22 @@
       padding: .5em;
     }
 
-    /*.clock:before {
-      content: attr(data-name) '<br>' attr(data-city);
+    .add-clock {
+      display: block;
+      text-align: center;
+      padding: 1em;
+      margin: 1em;
+      background-color: #eee;
+      color: #ccc;
+      cursor: pointer;
     }
-
-    .clock:after {
-      content: attr(data-city) ' UTC ' attr(data-timezone);
-    }*/
 
     .search-text {
       font-size: 1.2em;
       width: 100%;
       padding: .5em;
       border: none;
-      outline: none;
       text-align: center;
-    }
-
-    .search-text:focus {
-      outline: none;
     }
 
     /*.search-results {
@@ -143,12 +140,12 @@
 <body>
   <div class="main">
     <div class="search-form">
-      <input class="search-text" type="search" placeholder="Search cities" >
-      <div class="search-results"></div>
+      <input class="search-text" id="search-text" type="search" placeholder="Search cities" >
     </div>
 
     <input type="radio" id="no-clock" name="clock-actions">
     <div class="clocks"></div>
+    <label class="add-clock" for="search-text">Add clock</label>
   </div>
 
   <div class="footer">
@@ -176,6 +173,7 @@
   </script>
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places"></script>
   <script src="app.min.js"></script>
 </body>
 </html>
