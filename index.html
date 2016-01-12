@@ -6,6 +6,10 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html, body {
+      height: 100%;
+    }
+
     body {
       font-family: Georgia, serif;
       font-size: 1.2em;
@@ -24,6 +28,14 @@
     .main {
       max-width: 600px;
       margin: 0 auto;
+      min-height: 100%;
+      margin-bottom: -61px;
+    }
+
+    .main:after {
+      content: '';
+      display: block;
+      height: 61px;
     }
 
     .clock {
@@ -98,21 +110,23 @@
       cursor: pointer;
     }
 
-    .search-text {
-      font-size: 1.2em;
-      width: 100%;
-      padding: .5em;
-      border: none;
+    .search-form {
+      padding: 1em 0;
       text-align: center;
     }
 
-    /*.search-results {
-      display: none;
+    .search-text {
+      font-size: 1.2em;
+      padding: .2em;
+      border: none;
+      border-bottom: 3px solid #333;
+      transition: .2s border-color;
     }
 
-    .search-text:focus + .search-results {
-      display: block;
-    }*/
+    .search-text:focus {
+      outline: none;
+      border-color: #6a9fb5;
+    }
 
     .search-result-city {
       padding: 1em;
@@ -125,7 +139,7 @@
     }
 
     .footer {
-      margin-top: 2em;
+      padding: 1.3em;
       border-top: 1px solid #eee;
       font-size: .8em;
       color: #ccc;
@@ -135,23 +149,37 @@
     .footer p {
       margin: .8em;
     }
+
+
+    @media screen and (max-width: 600px) {
+      .main {
+        margin-bottom: -100px;
+      }
+
+      .main:after,
+      .footer {
+        height: 100px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="main">
     <div class="search-form">
-      <input class="search-text" id="search-text" type="search" placeholder="Search cities" >
+      <label class="search-label" for="search-text">What time is it in</label>
+      <input class="search-text" id="search-text" type="search" placeholder="some city" >
     </div>
 
     <input type="radio" id="no-clock" name="clock-actions">
     <div class="clocks"></div>
-    <label class="add-clock" for="search-text">Add clock</label>
   </div>
 
   <div class="footer">
-    <p>Fork it on <a href="https://github.com/matita/clocks/">GitHub</a></p>
-    <p>Need a feature? Found a bug? <a href="https://github.com/matita/clocks/issues">File an issue</a>!</p>
-    <p>Made by <a href="http://matita.github.io/2015/10/17/clocks/">Matita</a></p>
+    <span>Fork it on <a href="https://github.com/matita/clocks/">GitHub</a></span>
+    &middot;
+    <span>Need a feature? Found a bug? <a href="https://github.com/matita/clocks/issues">File an issue</a>!</span>
+    &middot;
+    <span>Made by <a href="http://matita.github.io/2015/10/17/clocks/">Matita</a></span>
   </div>
 
 

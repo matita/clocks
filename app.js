@@ -2649,7 +2649,7 @@ function ClocksView($view) {
   function getLocalClock() {
     return new Clock({
       name: '---',
-      city: 'Local',
+      city: 'Local time',
       timezone: -(new Date().getTimezoneOffset() / 60),
       cls: 'clock-local'
     });
@@ -2714,7 +2714,6 @@ function SearchCitiesView($view) {
   var autocomplete;
 
   $searchText
-    .on('keyup', onKeyPress)
     .on('focus', function() { $(this).select(); });
 
   google.maps.event.addDomListener(window, 'load', function() {
@@ -2725,14 +2724,12 @@ function SearchCitiesView($view) {
   });
 
 
-  function onKeyPress(e) {
-    if (e.which == 13) {
-      var cityName = $searchText.val();
-      setTimeout(function() {
-        $searchText.val('');
-      }, 100);
-      me.emit('cityselected', cityName);
-    }
+  function onChange(e) {
+    var cityName = $searchText.val();
+    setTimeout(function() {
+      $searchText.val('');
+    }, 100);
+    me.emit('cityselected', cityName);
   }
 }
 

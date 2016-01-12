@@ -82,7 +82,7 @@ function ClocksView($view) {
   function getLocalClock() {
     return new Clock({
       name: '---',
-      city: 'Local',
+      city: 'Local time',
       timezone: -(new Date().getTimezoneOffset() / 60),
       cls: 'clock-local'
     });

@@ -11,7 +11,6 @@ function SearchCitiesView($view) {
   var autocomplete;
 
   $searchText
-    .on('change', onKeyPress)
     .on('focus', function() { $(this).select(); });
 
   google.maps.event.addDomListener(window, 'load', function() {
