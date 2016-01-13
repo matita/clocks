@@ -2487,7 +2487,7 @@ urlClocks.forEach(function(info) {
     clocksView.addClock(clock);
   });
 });
-},{"./models/Clock.js":12,"./views/ClocksView.js":15,"./views/SearchCitiesView.js":16,"url":8}],12:[function(require,module,exports){
+},{"./models/Clock.js":12,"./views/ClocksView.js":16,"./views/SearchCitiesView.js":17,"url":8}],12:[function(require,module,exports){
 module.exports = function(opts) {
   var me = this;
   var date = new Date();
@@ -2557,6 +2557,31 @@ module.exports = {
 
 };
 },{}],14:[function(require,module,exports){
+module.exports = function (el, values) {
+  values = values.slice();
+  var word;
+  var charTimeout = 50;
+  var wordTimeout = 1000;
+
+  step();
+  
+  function step() {
+    if (word && word.length) {
+      
+      el.placeholder += word.shift();
+      setTimeout(step, charTimeout);
+
+    } else if (values.length) {
+      
+      setTimeout(function() {
+        el.placeholder = '';
+        word = values.shift().split('');
+        step();
+      }, wordTimeout);
+    }
+  }
+};
+},{}],15:[function(require,module,exports){
 module.exports = function(tmplText) {
   return function(obj) {
     return $(tmplText.replace(/\{\{(\w+)\}\}/g, function(match, key) {
@@ -2564,7 +2589,7 @@ module.exports = function(tmplText) {
     })).data('obj', obj);
   };
 };
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 var tmpl = require('../utils/tmpl.js');
@@ -2700,10 +2725,11 @@ function ClocksView($view) {
 }
 
 module.exports = ClocksView;
-},{"../models/Clock.js":12,"../utils/tmpl.js":14,"events":1,"util":10}],16:[function(require,module,exports){
+},{"../models/Clock.js":12,"../utils/tmpl.js":15,"events":1,"util":10}],17:[function(require,module,exports){
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 var cities = require('../models/cities.js');
+var populatePlaceholder = require('../utils/populate-placeholder.js');
 
 
 util.inherits(SearchCitiesView, EventEmitter);
@@ -2725,6 +2751,14 @@ function SearchCitiesView($view) {
   });
 
 
+  populatePlaceholder($searchText[0], [
+    'San Francisco',
+    'Rome',
+    'Singapore',
+    'some city'
+  ]);
+
+
   function onKeyPress(e) {
     if (e.which == 13) {
       var cityName = $searchText.val();
@@ -2738,4 +2772,4 @@ function SearchCitiesView($view) {
 
 
 module.exports = SearchCitiesView;
-},{"../models/cities.js":13,"events":1,"util":10}]},{},[11]);
+},{"../models/cities.js":13,"../utils/populate-placeholder.js":14,"events":1,"util":10}]},{},[11]);

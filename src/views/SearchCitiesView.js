@@ -1,6 +1,7 @@
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 var cities = require('../models/cities.js');
+var populatePlaceholder = require('../utils/populate-placeholder.js');
 
 
 util.inherits(SearchCitiesView, EventEmitter);
@@ -20,6 +21,14 @@ function SearchCitiesView($view) {
       { types: ['geocode'] }
     );
   });
+
+
+  populatePlaceholder($searchText[0], [
+    'San Francisco',
+    'Rome',
+    'Singapore',
+    'some city'
+  ]);
 
 
   function onKeyPress(e) {
