@@ -2714,6 +2714,7 @@ function SearchCitiesView($view) {
   var autocomplete;
 
   $searchText
+    .on('keyup', onKeyPress)
     .on('focus', function() { $(this).select(); });
 
   google.maps.event.addDomListener(window, 'load', function() {
@@ -2724,12 +2725,14 @@ function SearchCitiesView($view) {
   });
 
 
-  function onChange(e) {
-    var cityName = $searchText.val();
-    setTimeout(function() {
-      $searchText.val('');
-    }, 100);
-    me.emit('cityselected', cityName);
+  function onKeyPress(e) {
+    if (e.which == 13) {
+      var cityName = $searchText.val();
+      setTimeout(function() {
+        $searchText.val('');
+      }, 100);
+      me.emit('cityselected', cityName);
+    }
   }
 }
 
