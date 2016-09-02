@@ -21,6 +21,7 @@ function ClocksView($view) {
   $view
     .on('click', '.clock-action-rename', onClockRenameClick)
     .on('click', '.clock-action-delete', onClockDeleteClick)
+    .on('click', '.clock-action-changeTime', onClockChangeTimeClick)
     .on('click', '.clock-time', onClockTimeClick)
     .on('click', '.back-to-current-time', onBackToCurrentTimeClick);
 
@@ -67,7 +68,12 @@ function ClocksView($view) {
 
   function onClockRenameClick() {
     var clock = $(this).closest('.clock').data('obj');
-    clock.name = prompt('Rename clock', clock.name);
+    var newName = prompt('Rename clock', clock.name);
+
+    if (newName === null)
+      return setClocks();
+
+    clock.name = newName || '---';
     setClocks();
     me.emit('clockrenamed', clock);
   }
@@ -87,9 +93,20 @@ function ClocksView($view) {
   }
 
 
+  function onClockChangeTimeClick() {
+    var clock = $(this).closest('.clock').data('obj');
+    askToChangeTime(clock);
+    setClocks();
+  }
+
+
   function onClockTimeClick(e) {
     e.preventDefault();
     var clock = $(this).closest('.clock').data('obj');
+    askToChangeTime(clock);
+  }
+
+  function askToChangeTime(clock) {
     var timeText = prompt('Which time you want to view in ' + clock.city);
     var time = stringToTime(timeText);
 
