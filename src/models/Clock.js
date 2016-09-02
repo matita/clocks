@@ -55,4 +55,11 @@ module.exports = function(opts) {
     date.setHours(date.getHours() + (me.timezone || 0));
     return date;
   };
+
+
+  me.toUTC = function(date) {
+    var utc = new Date(date);
+    utc.setHours(utc.getHours() - (me.timezone || 0));
+    return utc;
+  };
 };

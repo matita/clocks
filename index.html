@@ -38,6 +38,23 @@
       height: 61px;
     }
 
+    .back-to-current-time {
+      display: none;
+      padding: .5em;
+      margin-top: .2em;
+      margin-bottom: .2em;
+      background: #eee;
+      text-align: center;
+      cursor: pointer;
+    }
+    .back-to-current-time:hover {
+      text-decoration: underline;
+    }
+
+    .with-reference-date .back-to-current-time {
+      display: block;
+    }
+
     .clock {
       width: 100%;
       padding: .5em;
@@ -57,6 +74,11 @@
       margin-right: .5em;
       width: 3em;
       text-align: center;
+      cursor: pointer;
+    }
+
+    .clock-time:hover {
+      border-bottom: 1px dashed #999;
     }
 
     .clock-name {
@@ -171,7 +193,9 @@
     </div>
 
     <input type="radio" id="no-clock" name="clock-actions">
-    <div class="clocks"></div>
+    <div class="clocks">
+      <p class="back-to-current-time">Back to current time</p>
+    </div>
   </div>
 
   <div class="footer">

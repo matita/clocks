@@ -1,6 +1,7 @@
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 var tmpl = require('../utils/tmpl.js');
+var stringToTime = require('../utils/string-to-time');
 var Clock = require('../models/Clock.js');
 
 var Tmpl = {
@@ -13,10 +14,15 @@ util.inherits(ClocksView, EventEmitter);
 function ClocksView($view) {
   var me = this;
   var clocks = me.clocks = [];
+  var localOffset = new Date().getTimezoneOffset();
+  var currentOffset = localOffset;
+  var referenceDate;
 
   $view
     .on('click', '.clock-action-rename', onClockRenameClick)
-    .on('click', '.clock-action-delete', onClockDeleteClick);
+    .on('click', '.clock-action-delete', onClockDeleteClick)
+    .on('click', '.clock-time', onClockTimeClick)
+    .on('click', '.back-to-current-time', onBackToCurrentTimeClick);
 
 
   me.addClock = function(clock) {
@@ -30,9 +36,11 @@ function ClocksView($view) {
 
   function setClocks() {
     $view.html(
+      ['<p class="back-to-current-time">Back to current time</p>'].concat(
       [getLocalClock()]
         .concat(clocks.sort(compareClocks))
         .map(Tmpl.clock)
+      )
     );
     //saveClocks();
     updateClocks();
@@ -40,10 +48,10 @@ function ClocksView($view) {
 
 
   function updateClocks() {
-    var utc = new Date(),
+    var utc = new Date(referenceDate || Date.now()),
       clock, d;
 
-    utc.setMinutes(utc.getMinutes() + utc.getTimezoneOffset());
+    utc.setMinutes(utc.getMinutes() + currentOffset);
     utc = utc.getTime();
 
     $view.find('.clock').each(function() {
@@ -79,6 +87,28 @@ function ClocksView($view) {
   }
 
 
+  function onClockTimeClick(e) {
+    e.preventDefault();
+    var clock = $(this).closest('.clock').data('obj');
+    var timeText = prompt('Which time you want to view in ' + clock.city);
+    var time = stringToTime(timeText);
+
+    if (!time)
+      return;
+
+    var utc = clock.toUTC(time);
+    var local = new Date(utc.setMinutes(utc.getMinutes() - currentOffset));
+    setReferenceDate(local);
+    updateClocks();
+  }
+
+
+  function onBackToCurrentTimeClick() {
+    setReferenceDate(null);
+    updateClocks();
+  }
+
+
   function getLocalClock() {
     return new Clock({
       name: '---',
@@ -97,6 +127,15 @@ function ClocksView($view) {
   function saveClocks() {
     if (window.localStorage)
       localStorage.setItem('clocks', JSON.stringify(clocks));
+  }
+
+
+  function setReferenceDate(date) {
+    referenceDate = date;
+    if (date)
+      $view.addClass('with-reference-date');
+    else
+      $view.removeClass('with-reference-date');
   }
 
 

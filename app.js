@@ -2487,7 +2487,7 @@ urlClocks.forEach(function(info) {
     clocksView.addClock(clock);
   });
 });
-},{"./models/Clock.js":12,"./views/ClocksView.js":16,"./views/SearchCitiesView.js":17,"url":8}],12:[function(require,module,exports){
+},{"./models/Clock.js":12,"./views/ClocksView.js":17,"./views/SearchCitiesView.js":18,"url":8}],12:[function(require,module,exports){
 module.exports = function(opts) {
   var me = this;
   var date = new Date();
@@ -2545,6 +2545,13 @@ module.exports = function(opts) {
     date.setHours(date.getHours() + (me.timezone || 0));
     return date;
   };
+
+
+  me.toUTC = function(date) {
+    var utc = new Date(date);
+    utc.setHours(utc.getHours() - (me.timezone || 0));
+    return utc;
+  };
 };
 },{}],13:[function(require,module,exports){
 module.exports = {
@@ -2582,6 +2589,37 @@ module.exports = function (el, values) {
   }
 };
 },{}],15:[function(require,module,exports){
+module.exports = function (text) {
+  if (!text)
+    return null;
+
+  var match = text.match(/^\s*([-+])?\s*(\d{1,2})\s*[-:.,]?\s*(\d{1,2})?\s*([ap]m?)?/i);
+  if (!match)
+    return null;
+
+  var sign = match[1];
+  var hh = +match[2];
+  var mm = +match[3] || 0;
+  var apm = (match[4] || '').toLowerCase();
+  var isPm = apm.indexOf('p') === 0;
+
+  var d = new Date();
+
+  if (apm) {
+    if (hh == 12) {
+      if (!isPm)
+        hh = 0;
+    } else if (hh < 12 && isPm) {
+      hh += 12;
+    }
+  }
+
+  d.setHours(hh);
+  d.setMinutes(mm);
+
+  return d;
+};
+},{}],16:[function(require,module,exports){
 module.exports = function(tmplText) {
   return function(obj) {
     return $(tmplText.replace(/\{\{(\w+)\}\}/g, function(match, key) {
@@ -2589,10 +2627,11 @@ module.exports = function(tmplText) {
     })).data('obj', obj);
   };
 };
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 var tmpl = require('../utils/tmpl.js');
+var stringToTime = require('../utils/string-to-time');
 var Clock = require('../models/Clock.js');
 
 var Tmpl = {
@@ -2605,10 +2644,15 @@ util.inherits(ClocksView, EventEmitter);
 function ClocksView($view) {
   var me = this;
   var clocks = me.clocks = [];
+  var localOffset = new Date().getTimezoneOffset();
+  var currentOffset = localOffset;
+  var referenceDate;
 
   $view
     .on('click', '.clock-action-rename', onClockRenameClick)
-    .on('click', '.clock-action-delete', onClockDeleteClick);
+    .on('click', '.clock-action-delete', onClockDeleteClick)
+    .on('click', '.clock-time', onClockTimeClick)
+    .on('click', '.back-to-current-time', onBackToCurrentTimeClick);
 
 
   me.addClock = function(clock) {
@@ -2622,9 +2666,11 @@ function ClocksView($view) {
 
   function setClocks() {
     $view.html(
+      ['<p class="back-to-current-time">Back to current time</p>'].concat(
       [getLocalClock()]
         .concat(clocks.sort(compareClocks))
         .map(Tmpl.clock)
+      )
     );
     //saveClocks();
     updateClocks();
@@ -2632,10 +2678,10 @@ function ClocksView($view) {
 
 
   function updateClocks() {
-    var utc = new Date(),
+    var utc = new Date(referenceDate || Date.now()),
       clock, d;
 
-    utc.setMinutes(utc.getMinutes() + utc.getTimezoneOffset());
+    utc.setMinutes(utc.getMinutes() + currentOffset);
     utc = utc.getTime();
 
     $view.find('.clock').each(function() {
@@ -2671,6 +2717,28 @@ function ClocksView($view) {
   }
 
 
+  function onClockTimeClick(e) {
+    e.preventDefault();
+    var clock = $(this).closest('.clock').data('obj');
+    var timeText = prompt('Which time you want to view in ' + clock.city);
+    var time = stringToTime(timeText);
+
+    if (!time)
+      return;
+
+    var utc = clock.toUTC(time);
+    var local = new Date(utc.setMinutes(utc.getMinutes() - currentOffset));
+    setReferenceDate(local);
+    updateClocks();
+  }
+
+
+  function onBackToCurrentTimeClick() {
+    setReferenceDate(null);
+    updateClocks();
+  }
+
+
   function getLocalClock() {
     return new Clock({
       name: '---',
@@ -2689,6 +2757,15 @@ function ClocksView($view) {
   function saveClocks() {
     if (window.localStorage)
       localStorage.setItem('clocks', JSON.stringify(clocks));
+  }
+
+
+  function setReferenceDate(date) {
+    referenceDate = date;
+    if (date)
+      $view.addClass('with-reference-date');
+    else
+      $view.removeClass('with-reference-date');
   }
 
 
@@ -2725,7 +2802,7 @@ function ClocksView($view) {
 }
 
 module.exports = ClocksView;
-},{"../models/Clock.js":12,"../utils/tmpl.js":15,"events":1,"util":10}],17:[function(require,module,exports){
+},{"../models/Clock.js":12,"../utils/string-to-time":15,"../utils/tmpl.js":16,"events":1,"util":10}],18:[function(require,module,exports){
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 var cities = require('../models/cities.js');
