@@ -16,7 +16,7 @@ module.exports = function(opts) {
   
   
   me.getLocation = function(callback) {
-    $.get('http://maps.googleapis.com/maps/api/geocode/json', {
+    $.get('https://maps.googleapis.com/maps/api/geocode/json', {
       address: me.city,
       sensor: false
     }, function(response) {
