@@ -1,10 +1,10 @@
 <script>
   import './Clock.css';
   import clocks from '../stores/clocks';
+  import { timeMs } from '../stores/time';
   import SubClock from './SubClock.svelte';
 
   export let zone;
-  export let dateMs;
 
   const date = new Date()
   let time;
@@ -14,7 +14,7 @@
 
   $: {
     timezone = ('minutesOffset' in zone ? zone.minutesOffset : -date.getTimezoneOffset()) / 60;
-    date.setTime(dateMs + ((zone.minutesOffset || 0) + (zone.isLocal ? 0 : date.getTimezoneOffset())) * 60 * 1000);
+    date.setTime($timeMs + ((zone.minutesOffset || 0) + (zone.isLocal ? 0 : date.getTimezoneOffset())) * 60 * 1000);
     time = formatTime(date);
   }
 
