@@ -12,4 +12,5 @@ export default {
 
     return { ...clock, name: newName };
   })),
+  delete: (clock) => update((clocks) => clocks.filter((c) => c !== clock)),
 }

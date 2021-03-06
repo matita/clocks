@@ -16,6 +16,14 @@
   function onClick() {
     active = true;
   }
+
+  function onDeleteClick() {
+    if (!confirm('Are you sure you want to delete this clock?')) {
+      return;
+    }
+    active = false;
+    clocks.delete(clock);
+  }
 </script>
 
 <style>
@@ -45,7 +53,7 @@
     <div class="clock-close" on:click|stopPropagation={() => active = false}>&times;</div>
     <div class="clock-actions">
       <button on:click|stopPropagation={onRenameClick}>Rename</button>
-      <button>Delete</button>
+      <button on:click|stopPropagation={onDeleteClick}>Delete</button>
     </div>
   {/if}
 </div>
