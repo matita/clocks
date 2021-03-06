@@ -1,0 +1,158 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: Georgia, serif;
+  font-size: 1.2em;
+  color: #333;
+}
+
+a {
+  color: #6a9fb5;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.main {
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100%;
+  margin-bottom: -61px;
+}
+
+.main:after {
+  content: '';
+  display: block;
+  height: 61px;
+}
+
+.with-reference-date .back-to-current-time {
+  display: block;
+}
+
+input[name="clock-actions"] {
+  display: none;
+}
+
+input[name="clock-actions"]:checked + .clock-actions {
+  display: block;
+}
+
+.clock-action {
+  padding: .4em;
+}
+
+.clock-action-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  padding: .5em;
+}
+
+@media screen and (max-width: 600px) {
+  .main {
+    margin-bottom: -100px;
+  }
+
+  .main:after {
+    height: 100px;
+  }
+}
+.search-form {
+  padding: 1em 0;
+  text-align: center;
+}
+
+.search-text {
+  font-size: 1.2em;
+  padding: .2em;
+  border: none;
+  border-bottom: 3px solid #333;
+  transition: .2s border-color;
+}
+
+.search-text:focus {
+  outline: none;
+  border-color: #6a9fb5;
+}
+.footer {
+  padding: 1.3em;
+  border-top: 1px solid #eee;
+  font-size: .8em;
+  color: #ccc;
+  text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+  .footer {
+    height: 100px;
+  }
+}
+.back-to-current-time {
+  display: none;
+  padding: .5em;
+  margin-top: .2em;
+  margin-bottom: .2em;
+  text-align: center;
+  cursor: pointer;
+  background: #f7e3bf;
+  color: #d0895d;
+}
+.back-to-current-time:hover {
+  text-decoration: underline;
+}
+.clock {
+  width: 100%;
+  padding: .5em;
+  display: flex;
+  align-items: stretch;
+}
+
+.clock + .clock {
+  border-top: 1px solid #eee;
+}
+
+.clock-local {
+  background: rgba(0,0,0,.04);
+}
+
+.clock-time {
+  margin-right: .5em;
+  width: 4.5em;
+  text-align: center;
+  cursor: pointer;
+}
+
+.clock-time-display {
+  font-size: 1.4em;
+}
+
+.clock-time-display:hover {
+  outline: 1px dashed #999;
+}
+
+.clock-gmt {
+  font-size: .7em;
+  color: #999;
+}
+
+.clock-meta {
+  flex: 1;
+}
+
+.clock-name {
+  color: #6a9fb5;
+}
+
+.clock-city {
+  color: #999;
+  font-size: .7em;
+}
+.sub-clock.svelte-qjtgwl{position:relative;margin:.2em 0;transition:all .2s}.active.svelte-qjtgwl{padding:.4em;box-shadow:0 2px 2px rgba(0,0,0,.2)}.clock-close.svelte-qjtgwl{position:absolute;top:.2em;right:.5em;color:#999}
