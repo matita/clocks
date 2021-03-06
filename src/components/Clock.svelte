@@ -1,6 +1,7 @@
 <script>
   import './Clock.css';
   import clocks from '../stores/clocks';
+  import SubClock from './SubClock.svelte';
 
   export let zone;
   export let dateMs;
@@ -18,14 +19,6 @@
   }
 
   $: sortedClocks = zone.clocks.sort((c1, c2) => (c1.name || '').localeCompare(c2.name || ''))
-
-  function onNameClick(clock) {
-    const newName = prompt('Name of the clock:', clock.name || '');
-    if (newName === null) {
-      return;
-    }
-    clocks.rename(clock, newName);
-  }
 </script>
 
 <div class="clock" class:clock-local="{zone.isLocal}">
@@ -35,17 +28,7 @@
   </div>
   <div class="clock-meta">
     {#each sortedClocks as clock}
-      <div class="sub-clock">
-        <div class="clock-name" on:click={() => onNameClick(clock)}>{clock.name || '---'}</div>
-        <div class="clock-city">{clock.location}</div>
-      </div>
+      <SubClock {clock} />
     {/each}
-  </div>
-
-  <div class="clock-actions">
-    <div class="clock-action clock-action-rename">Rename</div>
-    <div class="clock-action clock-action-delete">Delete</div>
-    <div class="clock-action clock-action-changeTime">Test specific time</div>
-    <div class="clock-action-close"><label for="no-clock">&times;</label></div>
   </div>
 </div>

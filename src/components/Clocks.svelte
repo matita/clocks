@@ -19,10 +19,6 @@
     }))
     .sort((c1, c2) => c1.minutesOffset - c2.minutesOffset);
 
-  $: {
-    console.log('sortedZones', sortedZones);
-  }
-
   setInterval(() => dateMs = Date.now(), 100);
 </script>
 
