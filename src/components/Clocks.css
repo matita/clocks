@@ -1,0 +1,13 @@
+.back-to-current-time {
+  display: none;
+  padding: .5em;
+  margin-top: .2em;
+  margin-bottom: .2em;
+  text-align: center;
+  cursor: pointer;
+  background: #f7e3bf;
+  color: #d0895d;
+}
+.back-to-current-time:hover {
+  text-decoration: underline;
+}

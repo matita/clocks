@@ -1,4 +1,5 @@
 <script>
+  import './SearchForm.css';
   import { onMount, createEventDispatcher } from 'svelte';
   import { autocomplete } from '../api/maps';
 

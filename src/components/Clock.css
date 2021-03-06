@@ -1,0 +1,46 @@
+.clock {
+  width: 100%;
+  padding: .5em;
+  font-size: 2em;
+}
+
+.clock + .clock {
+  border-top: 1px solid #eee;
+}
+
+.clock-local {
+  background: rgba(0,0,0,.04);
+}
+
+.clock-time {
+  float: left;
+  margin-right: .5em;
+  width: 3em;
+  text-align: center;
+  cursor: pointer;
+}
+
+.clock-time:hover {
+  outline: 1px dashed #999;
+}
+
+.clock-name {
+  color: #6a9fb5;
+  font-size: .5em;
+}
+
+.clock-city {
+  font-size: .4em;
+  color: #999;
+}
+
+.clock-actions {
+  position: relative;
+  display: none;
+  background: #eee;
+  box-shadow: 0 2px 2px rgba(0,0,0,.4) inset;
+  border-radius: 1em;
+  font-size: .8em;
+  margin: 1em;
+  padding: 1em;
+}

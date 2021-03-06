@@ -1,5 +1,7 @@
 <script>
-  import Clock from './Clock.svelte'
+  import './Clocks.css';
+  import Clock from './Clock.svelte';
+
   export let clocks;
 
   let dateMs = Date.now()

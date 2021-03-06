@@ -1,3 +1,7 @@
+<script>
+  import './Footer.css';
+</script>
+
 <div class="footer">
   <span>Fork it on <a href="https://github.com/matita/clocks/">GitHub</a></span>
   &middot;
