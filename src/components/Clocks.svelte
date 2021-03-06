@@ -9,7 +9,6 @@
         const { minutesOffset } = clock;
         const zoneClocks = zones[minutesOffset] = zones[minutesOffset] || [];
         zoneClocks.push(clock);
-        console.log(clock, zones);
         return zones;
       }, {})
     )
