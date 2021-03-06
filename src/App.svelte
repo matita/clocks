@@ -8,7 +8,7 @@
   const params = new URLSearchParams(location.search.substr(1));
   const date = new Date();
 
-  clocks.add({ name: '', location: 'Local', isLocal: true });
+  // clocks.add({ name: '', location: 'Local', isLocal: true });
   deserializeClocks(params.get('clocks')).forEach(clocks.add);
   history.replaceState({}, 'Clocks', `?`);
   try {

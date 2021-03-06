@@ -2,7 +2,7 @@
   import './Clock.css';
   import clocks from '../stores/clocks';
 
-  export let clock;
+  export let zone;
   export let dateMs;
 
   const date = new Date()
@@ -12,12 +12,14 @@
   const formatTime = (d) => pad(d.getHours()) + ':' + pad(d.getMinutes());
 
   $: {
-    timezone = ('minutesOffset' in clock ? clock.minutesOffset : -date.getTimezoneOffset()) / 60;
-    date.setTime(dateMs + ((clock.minutesOffset || 0) + (clock.isLocal ? 0 : date.getTimezoneOffset())) * 60 * 1000);
+    timezone = ('minutesOffset' in zone ? zone.minutesOffset : -date.getTimezoneOffset()) / 60;
+    date.setTime(dateMs + ((zone.minutesOffset || 0) + (zone.isLocal ? 0 : date.getTimezoneOffset())) * 60 * 1000);
     time = formatTime(date);
   }
 
-  function onNameClick() {
+  $: sortedClocks = zone.clocks.sort((c1, c2) => (c1.name || '').localeCompare(c2.name || ''))
+
+  function onNameClick(clock) {
     const newName = prompt('Name of the clock:', clock.name || '');
     if (newName === null) {
       return;
@@ -26,13 +28,18 @@
   }
 </script>
 
-<div class="clock" class:clock-local="{clock.isLocal}">
-  <div class="clock-time">{time}</div>
-  <div class="clock-name" on:click={onNameClick}>{clock.name || '---'}</div>
-  <div class="clock-city">
-    GMT{timezone >= 0 ? `+${timezone}` : timezone}
-    &middot;
-    {clock.location}
+<div class="clock" class:clock-local="{zone.isLocal}">
+  <div class="clock-time">
+    <span class="clock-time-display">{time}</span>
+    <div class="clock-gmt">GMT{timezone >= 0 ? `+${timezone}` : timezone}</div>
+  </div>
+  <div class="clock-meta">
+    {#each sortedClocks as clock}
+      <div class="sub-clock">
+        <div class="clock-name" on:click={() => onNameClick(clock)}>{clock.name || '---'}</div>
+        <div class="clock-city">{clock.location}</div>
+      </div>
+    {/each}
   </div>
 
   <div class="clock-actions">

@@ -1,7 +1,8 @@
 .clock {
   width: 100%;
   padding: .5em;
-  font-size: 2em;
+  display: flex;
+  align-items: stretch;
 }
 
 .clock + .clock {
@@ -13,25 +14,36 @@
 }
 
 .clock-time {
-  float: left;
   margin-right: .5em;
-  width: 3em;
+  width: 4.5em;
   text-align: center;
   cursor: pointer;
 }
 
-.clock-time:hover {
+.clock-time-display {
+  font-size: 1.4em;
+}
+
+.clock-time-display:hover {
   outline: 1px dashed #999;
+}
+
+.clock-gmt {
+  font-size: .7em;
+  color: #999;
+}
+
+.clock-meta {
+  flex: 1;
 }
 
 .clock-name {
   color: #6a9fb5;
-  font-size: .5em;
 }
 
 .clock-city {
-  font-size: .4em;
   color: #999;
+  font-size: .7em;
 }
 
 .clock-actions {
@@ -43,4 +55,8 @@
   font-size: .8em;
   margin: 1em;
   padding: 1em;
+}
+
+.sub-clock {
+  margin: .2em 0;
 }

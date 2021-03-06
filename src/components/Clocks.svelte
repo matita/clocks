@@ -4,14 +4,31 @@
   import clocks from '../stores/clocks';
 
   let dateMs = Date.now()
-  $: sortedClocks = $clocks.sort((c1, c2) => c1.minutesOffset - c2.minutesOffset)
+  $: sortedZones = Object.entries(
+      $clocks.reduce((zones, clock) => {
+        const { minutesOffset } = clock;
+        const zoneClocks = zones[minutesOffset] = zones[minutesOffset] || [];
+        zoneClocks.push(clock);
+        console.log(clock, zones);
+        return zones;
+      }, {})
+    )
+    .map(([minutesOffset, clocks]) => ({
+      minutesOffset: +minutesOffset,
+      clocks,
+    }))
+    .sort((c1, c2) => c1.minutesOffset - c2.minutesOffset);
+
+  $: {
+    console.log('sortedZones', sortedZones);
+  }
 
   setInterval(() => dateMs = Date.now(), 100);
 </script>
 
 <div class="clocks">
   <p class="back-to-current-time">Back to current time</p>
-  {#each sortedClocks as clock}
-    <Clock {clock} {dateMs} />
+  {#each sortedZones as zone}
+    <Clock {zone} {dateMs} />
   {/each}
 </div>
