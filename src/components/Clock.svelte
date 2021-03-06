@@ -1,5 +1,6 @@
 <script>
   import './Clock.css';
+  import clocks from '../stores/clocks';
 
   export let clock;
   export let dateMs;
@@ -17,7 +18,11 @@
   }
 
   function onNameClick() {
-    clock.name = prompt('Name of the clock:', clock.name || '');
+    const newName = prompt('Name of the clock:', clock.name || '');
+    if (newName === null) {
+      return;
+    }
+    clocks.rename(clock, newName);
   }
 </script>
 

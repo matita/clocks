@@ -3,29 +3,36 @@
   import Footer from './components/Footer.svelte';
   import Clocks from './components/Clocks.svelte';
   import { serializeClocks, deserializeClocks } from './utils';
+  import clocks from './stores/clocks';
 
   const params = new URLSearchParams(location.search.substr(1));
   const date = new Date();
 
-  let clocks = [{
-    name: '',
-    location: 'local',
-    isLocal: true,
-  }].concat(deserializeClocks(params.get('clocks')));
+  clocks.add({ name: '', location: 'Local', isLocal: true });
+  deserializeClocks(params.get('clocks')).forEach(clocks.add);
+  history.replaceState({}, 'Clocks', `?`);
+  try {
+    JSON.parse(localStorage['clocks_items']).forEach(clocks.add);
+  } catch (err) {
+    console.log('error while loading from localStorage', err);
+    // do nothing
+  }
 
+  clocks.subscribe((clocks) => localStorage['clocks_items'] = JSON.stringify(clocks.filter((c) => !c.isLocal)));
 
+  // $: {
+  //
+  // }
 
   function onLocationSelected({ detail }) {
-    clocks.push(detail);
-    history.replaceState({}, 'Clocks', `?clocks=${serializeClocks(clocks)}`);
-    clocks = clocks.sort((c1, c2) => c1.minutesOffset - c2.minutesOffset);
+    clocks.add(detail);
   }
 </script>
 
 <div class="main">
   <SearchForm on:locationselected={onLocationSelected} />
 
-  <Clocks {clocks} />
+  <Clocks />
 </div>
 
 <Footer />

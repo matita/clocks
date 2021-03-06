@@ -11,8 +11,9 @@ export const serializeClocks = (clocks) => clocks
   ].map(slimEncode).join(';'))
   .join('|');
 
-export const deserializeClocks = (clocksStr) => clocksStr
+export const deserializeClocks = (clocksStr) => (clocksStr || '')
   .split('|')
+  .filter((p) => !!p) // discard empty strings
   .map((part) => {
     const [ location, minutesOffset, name ] = part.split(';').map(decodeURIComponent);
     return {
