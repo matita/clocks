@@ -9,8 +9,6 @@
   export let clock;
   $: active = $activeClock === clock;
 
-  console.log('this subclock', this);
-
   function onRenameClick() {
     const newName = prompt('Name of the clock:', clock.name || '');
     if (newName === null) {

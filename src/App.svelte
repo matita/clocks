@@ -1,3 +1,15 @@
+<style global>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  @layer base {
+    a {
+      @apply text-green-500;
+    }
+  }
+</style>
+
 <script>
   import SearchForm from './components/SearchForm.svelte';
   import Footer from './components/Footer.svelte';
@@ -25,10 +37,12 @@
   }
 </script>
 
-<div class="max-w-xl mx-auto m-4 text-gray-600">
-  <SearchForm on:locationselected={onLocationSelected} />
+<div class="flex-grow">
+  <div class="max-w-xl mx-auto my-4 text-gray-600">
+    <SearchForm on:locationselected={onLocationSelected} />
 
-  <Clocks />
+    <Clocks />
+  </div>
 </div>
 
 <Footer />
