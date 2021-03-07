@@ -57,7 +57,7 @@
   <button class="absolute top-2 right-1 px-2" on:click={onClick}>&vellip;</button>
   {#if active}
     <div
-      class="z-10 bg-black bg-opacity-30 fixed top-0 left-0 w-screen h-screen flex place-items-center"
+      class="z-10 bg-black bg-opacity-30 fixed top-0 left-0 right-0 bottom-0 flex place-items-center"
       transition:fade="{{ duration: 100 }}"
       on:click={() => $activeClock = null}
     >
