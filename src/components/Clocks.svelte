@@ -1,5 +1,5 @@
 <script>
-  import './Clocks.css';
+  // import './Clocks.css';
   import Clock from './Clock.svelte';
   import clocks from '../stores/clocks';
 
@@ -18,8 +18,8 @@
     .sort((c1, c2) => c1.minutesOffset - c2.minutesOffset);
 </script>
 
-<div class="clocks">
-  <p class="back-to-current-time">Back to current time</p>
+<div class="">
+  <!-- <p class="back-to-current-time">Back to current time</p> -->
   {#each sortedZones as zone (zone.minutesOffset)}
     <Clock {zone} />
   {/each}

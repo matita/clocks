@@ -20,16 +20,12 @@
 
   clocks.subscribe((clocks) => localStorage['clocks_items'] = JSON.stringify(clocks.filter((c) => !c.isLocal)));
 
-  // $: {
-  //
-  // }
-
   function onLocationSelected({ detail }) {
     clocks.add(detail);
   }
 </script>
 
-<div class="main">
+<div class="max-w-xl mx-auto m-4 text-gray-600">
   <SearchForm on:locationselected={onLocationSelected} />
 
   <Clocks />

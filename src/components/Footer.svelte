@@ -1,5 +1,5 @@
 <script>
-  import './Footer.css';
+  // import './Footer.css';
 </script>
 
 <div class="footer">

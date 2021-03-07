@@ -26,29 +26,9 @@
   }
 </script>
 
-<style>
-  .sub-clock {
-    position: relative;
-    margin: .2em 0;
-    transition: all .2s;
-  }
-
-  .active {
-    padding: .4em;
-    box-shadow: 0 2px 2px rgba(0,0,0,.2);
-  }
-
-  .clock-close {
-    position: absolute;
-    top: .2em;
-    right: .5em;
-    color: #999;
-  }
-</style>
-
-<div class="sub-clock" class:active={active} on:click={onClick}>
-  <div class="clock-name">{clock.name || '---'}</div>
-  <div class="clock-city">{clock.location}</div>
+<div class="bg-white px-4 py-2 rounded-xl mb-2" class:active={active} on:click={onClick}>
+  <div class="text-green-500">{clock.name || '---'}</div>
+  <div class="text-xs text-gray-400">{clock.location}</div>
   {#if active}
     <div class="clock-close" on:click|stopPropagation={() => active = false}>&times;</div>
     <div class="clock-actions">
