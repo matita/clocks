@@ -9,7 +9,7 @@
   const date = new Date()
   const timezone = ('minutesOffset' in zone ? zone.minutesOffset : -date.getTimezoneOffset()) / 60;
   const formatTime = (d) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
+  const isCurrentTimezone = zone.minutesOffset === -date.getTimezoneOffset();
 
   $: {
     date.setTime($timeMs + ((zone.minutesOffset || 0) + (zone.isLocal ? 0 : date.getTimezoneOffset())) * 60 * 1000);
@@ -22,7 +22,7 @@
 <div class="flex max-w-full" transition:slide>
   <div class="flex-none relative w-24">
     <div class="text-center py-2 px-2 sticky top-0">
-      <span>{time}</span>
+      <span class:text-green-500={isCurrentTimezone}>{time}</span>
       <div class="text-xs text-gray-400">GMT{timezone >= 0 ? `+${timezone}` : timezone}</div>
     </div>
   </div>
