@@ -10,6 +10,8 @@
   onMount(async () => {
     gmapAutocomplete = await autocomplete(input);
     gmapAutocomplete.addListener('place_changed', onPlaceSelected);
+
+    input.focus();
   });
 
   function onPlaceSelected() {

@@ -19,14 +19,14 @@
   $: sortedClocks = zone.clocks.sort((c1, c2) => (c1.name || '').localeCompare(c2.name || ''))
 </script>
 
-<div class="flex" class:clock-local="{zone.isLocal}" transition:slide>
-  <div class="relative w-24">
+<div class="flex max-w-full" transition:slide>
+  <div class="flex-none relative w-24">
     <div class="text-center py-2 px-2 sticky top-0">
       <span>{time}</span>
       <div class="text-xs text-gray-400">GMT{timezone >= 0 ? `+${timezone}` : timezone}</div>
     </div>
   </div>
-  <div class="flex-grow">
+  <div class="flex-1">
     {#each sortedClocks as clock (clock.id)}
       <SubClock {clock} />
     {/each}
