@@ -5,7 +5,7 @@
 
   @layer base {
     a {
-      @apply text-green-500;
+      @apply text-primary-600;
     }
   }
 </style>

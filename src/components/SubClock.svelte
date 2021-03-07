@@ -52,7 +52,7 @@
   class="bg-white px-4 py-2 mb-2 relative rounded-xl transition-shadow duration-300"
   transition:slide
 >
-  <div class="text-green-500">{clock.name || '---'}</div>
+  <div class="text-gray-500">{clock.name || '---'}</div>
   <div class="text-xs text-gray-400">{clock.location}</div>
   <button class="absolute top-2 right-1 px-2" on:click={onClick}>&vellip;</button>
   {#if active}

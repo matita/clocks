@@ -22,8 +22,13 @@
 <div class="flex max-w-full" transition:slide>
   <div class="flex-none relative w-24">
     <div class="text-center py-2 px-2 sticky top-0">
-      <span class:text-green-500={isCurrentTimezone}>{time}</span>
-      <div class="text-xs text-gray-400">GMT{timezone >= 0 ? `+${timezone}` : timezone}</div>
+      <span class:text-primary-600={isCurrentTimezone}>{time}</span>
+      <div
+        class="text-xs text-gray-400"
+        class:text-primary-500={isCurrentTimezone}
+      >
+        GMT{timezone >= 0 ? `+${timezone}` : timezone}
+      </div>
     </div>
   </div>
   <div class="flex-1">
