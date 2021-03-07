@@ -20,9 +20,11 @@
 </script>
 
 <div class="flex" class:clock-local="{zone.isLocal}">
-  <div class="text-center py-2 mr-4">
-    <span class="">{time}</span>
-    <div class="text-xs text-gray-400">GMT{timezone >= 0 ? `+${timezone}` : timezone}</div>
+  <div class="relative pb-2">
+    <div class="text-center py-2 mr-4 sticky top-0">
+      <span>{time}</span>
+      <div class="text-xs text-gray-400">GMT{timezone >= 0 ? `+${timezone}` : timezone}</div>
+    </div>
   </div>
   <div class="flex-grow">
     {#each sortedClocks as clock (clock.id)}
