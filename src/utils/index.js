@@ -1,3 +1,5 @@
+export { default as copy } from './copy';
+
 export const slimEncode = (text) => encodeURIComponent(text)
   .replace(/%20/g, '+')
   .replace(/%2C/g, ',');

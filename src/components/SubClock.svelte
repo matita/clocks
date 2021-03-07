@@ -3,11 +3,13 @@
   let activeClock = writable(null);
 </script>
 <script>
+  import { copy, serializeClocks } from '../utils';
   import { slide } from 'svelte/transition';
   import Action from './Action.svelte';
   import clocks from '../stores/clocks';
 
   export let clock;
+  let copied = false;
   $: active = $activeClock === clock;
 
   function onRenameClick() {
@@ -30,6 +32,17 @@
     $activeClock = null;
     clocks.delete(clock);
   }
+
+  function onShareClick() {
+    if (copied) {
+      return;
+    }
+
+    const url = `${location.protocol}//${location.host}${location.pathname}?clocks=${serializeClocks([clock])}`;
+    copy(url);
+    copied = true;
+    setTimeout(() => copied = false, 1200);
+  }
 </script>
 
 <div
@@ -46,6 +59,7 @@
     <button class="absolute top-1 right-1 px-2 focus:outline-none focus:ring-1" on:click|stopPropagation={() => active = false}>&times;</button>
     <div class="text-right" transition:slide>
       <Action danger on:click={onDeleteClick}>Delete</Action>
+      <Action on:click={onShareClick}>{ copied ? 'Copied!' : 'Share' }</Action>
       <Action on:click={onRenameClick}>Rename</Action>
     </div>
   {/if}

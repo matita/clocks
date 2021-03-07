@@ -17,12 +17,16 @@
   import { serializeClocks, deserializeClocks } from './utils';
   import clocks from './stores/clocks';
 
+  // Get clocks from URL
   const params = new URLSearchParams(location.search.substr(1));
-  const date = new Date();
-
-  // clocks.add({ name: '', location: 'Local', isLocal: true });
-  deserializeClocks(params.get('clocks')).forEach(clocks.add);
+  const clocksFromUrl = deserializeClocks(params.get('clocks'));
   history.replaceState({}, 'Clocks', `?`);
+  // Wait some time to add clocks from URL, so it's more clear that they've been just added
+  setTimeout(() => {
+    clocksFromUrl.forEach(clocks.add);
+  }, 200);
+
+  // Load clocks from localStorage
   try {
     JSON.parse(localStorage['clocks_items']).forEach(clocks.add);
   } catch (err) {
