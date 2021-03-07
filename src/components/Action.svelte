@@ -1,12 +1,7 @@
-<script>
-  export let danger = false;
-</script>
-
-<button
-  class="uppercase px-2 focus:outline-none focus:ring-1 focus:ring-gray-300"
-  class:text-green-500={!danger}
-  class:text-red-500={danger}
+<div
+  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+  role="menuitem"
   on:click|stopPropagation
 >
-  <slot />
-</button>
+  <slot></slot>
+</div>

@@ -4,7 +4,7 @@
 </script>
 <script>
   import { copy, serializeClocks } from '../utils';
-  import { slide } from 'svelte/transition';
+  import { fade, slide } from 'svelte/transition';
   import Action from './Action.svelte';
   import clocks from '../stores/clocks';
 
@@ -13,11 +13,11 @@
   $: active = $activeClock === clock;
 
   function onRenameClick() {
+    $activeClock = null;
     const newName = prompt('Name of the clock:', clock.name || '');
     if (newName === null) {
       return;
     }
-    $activeClock = null;
     clocks.rename(clock, newName);
   }
 
@@ -41,26 +41,36 @@
     const url = `${location.protocol}//${location.host}${location.pathname}?clocks=${serializeClocks([clock])}`;
     copy(url);
     copied = true;
-    setTimeout(() => copied = false, 1200);
+    setTimeout(() => {
+      copied = false;
+      $activeClock = null;
+    }, 1000);
   }
 </script>
 
 <div
   class="bg-white px-4 py-2 mb-2 relative rounded-xl transition-shadow duration-300"
-  class:z-10={active}
-  class:shadow-none={!active}
-  class:shadow-lg={active}
-  on:click={onClick}
   transition:slide
 >
   <div class="text-green-500">{clock.name || '---'}</div>
   <div class="text-xs text-gray-400">{clock.location}</div>
+  <button class="absolute top-2 right-1 px-2" on:click={onClick}>&vellip;</button>
   {#if active}
-    <button class="absolute top-1 right-1 px-2 focus:outline-none focus:ring-1" on:click|stopPropagation={() => active = false}>&times;</button>
-    <div class="text-right" transition:slide>
-      <Action danger on:click={onDeleteClick}>Delete</Action>
-      <Action on:click={onShareClick}>{ copied ? 'Copied!' : 'Share' }</Action>
-      <Action on:click={onRenameClick}>Rename</Action>
+    <div
+      class="z-10 bg-black bg-opacity-30 fixed top-0 left-0 w-screen h-screen flex place-items-center"
+      transition:fade="{{ duration: 100 }}"
+      on:click={() => $activeClock = null}
+    >
+      <div
+        role="menu"
+        class="bg-white w-56 mx-auto rounded-md ring-1 ring-black ring-opacity-5"
+      >
+        <div class="py-1" role="none">
+          <Action on:click={onRenameClick}>Rename</Action>
+          <Action on:click={onShareClick}>{ copied ? 'Link copied!' : 'Share' }</Action>
+          <Action on:click={onDeleteClick}>Delete</Action>
+        </div>
+      </div>
     </div>
   {/if}
 </div>
