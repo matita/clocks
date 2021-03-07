@@ -20,7 +20,7 @@
 
 <div class="clocks">
   <p class="back-to-current-time">Back to current time</p>
-  {#each sortedZones as zone}
+  {#each sortedZones as zone (zone.minutesOffset)}
     <Clock {zone} />
   {/each}
 </div>

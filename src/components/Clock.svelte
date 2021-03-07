@@ -27,7 +27,7 @@
     <div class="clock-gmt">GMT{timezone >= 0 ? `+${timezone}` : timezone}</div>
   </div>
   <div class="clock-meta">
-    {#each sortedClocks as clock}
+    {#each sortedClocks as clock (clock.id)}
       <SubClock {clock} />
     {/each}
   </div>
