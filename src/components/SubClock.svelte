@@ -63,13 +63,11 @@
     >
       <div
         role="menu"
-        class="bg-white w-56 mx-auto rounded-md ring-1 ring-black ring-opacity-5"
+        class="bg-white w-56 mx-auto rounded-md ring-1 ring-black ring-opacity-5 py-1"
       >
-        <div class="py-1" role="none">
-          <Action on:click={onRenameClick}>Rename</Action>
-          <Action on:click={onShareClick}>{ copied ? 'Link copied!' : 'Share' }</Action>
-          <Action on:click={onDeleteClick}>Delete</Action>
-        </div>
+        <Action on:click={onRenameClick}>Rename</Action>
+        <Action on:click={onShareClick}>{ copied ? 'Link copied!' : 'Share' }</Action>
+        <Action on:click={onDeleteClick}>Delete</Action>
       </div>
     </div>
   {/if}
