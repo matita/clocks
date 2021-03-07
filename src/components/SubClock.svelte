@@ -3,6 +3,7 @@
   let activeClock = writable(null);
 </script>
 <script>
+  import { slide } from 'svelte/transition';
   import Action from './Action.svelte';
   import clocks from '../stores/clocks';
 
@@ -31,21 +32,19 @@
   }
 </script>
 
-
-
 <div
-  class="bg-white px-4 py-2 mb-2 relative rounded-xl transition-all transform"
+  class="bg-white px-4 py-2 mb-2 relative rounded-xl transition-shadow duration-300"
   class:z-10={active}
-  class:-translate-y-1={active}
   class:shadow-none={!active}
   class:shadow-lg={active}
   on:click={onClick}
+  transition:slide
 >
   <div class="text-green-500">{clock.name || '---'}</div>
   <div class="text-xs text-gray-400">{clock.location}</div>
   {#if active}
     <button class="absolute top-1 right-1 px-2 focus:outline-none focus:ring-1" on:click|stopPropagation={() => active = false}>&times;</button>
-    <div class="text-right">
+    <div class="text-right" transition:slide>
       <Action danger on:click={onDeleteClick}>Delete</Action>
       <Action on:click={onRenameClick}>Rename</Action>
     </div>

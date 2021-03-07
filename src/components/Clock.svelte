@@ -1,5 +1,5 @@
 <script>
-  // import './Clock.css';
+  import { slide } from 'svelte/transition';
   import { timeMs } from '../stores/time';
   import SubClock from './SubClock.svelte';
 
@@ -19,7 +19,7 @@
   $: sortedClocks = zone.clocks.sort((c1, c2) => (c1.name || '').localeCompare(c2.name || ''))
 </script>
 
-<div class="flex" class:clock-local="{zone.isLocal}">
+<div class="flex" class:clock-local="{zone.isLocal}" transition:slide>
   <div class="relative w-24">
     <div class="text-center py-2 px-2 sticky top-0">
       <span>{time}</span>

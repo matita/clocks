@@ -14,6 +14,10 @@
 
   function onPlaceSelected() {
     const place = gmapAutocomplete.getPlace();
+    if (!place || !place.geometry) {
+      return;
+    }
+
     const coordinates = place.geometry.location;
 
     const data = {
