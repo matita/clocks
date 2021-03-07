@@ -4,12 +4,12 @@
   import SubClock from './SubClock.svelte';
 
   export let zone;
+  let time;
 
   const date = new Date()
   const timezone = ('minutesOffset' in zone ? zone.minutesOffset : -date.getTimezoneOffset()) / 60;
-  const pad = (text) => ('0' + text).substr(-2);
-  const formatTime = (d) => pad(d.getHours()) + ':' + pad(d.getMinutes());
-  let time;
+  const formatTime = (d) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
 
   $: {
     date.setTime($timeMs + ((zone.minutesOffset || 0) + (zone.isLocal ? 0 : date.getTimezoneOffset())) * 60 * 1000);
@@ -20,8 +20,8 @@
 </script>
 
 <div class="flex" class:clock-local="{zone.isLocal}">
-  <div class="relative pb-2">
-    <div class="text-center py-2 mr-4 sticky top-0">
+  <div class="relative w-24">
+    <div class="text-center py-2 px-2 sticky top-0">
       <span>{time}</span>
       <div class="text-xs text-gray-400">GMT{timezone >= 0 ? `+${timezone}` : timezone}</div>
     </div>
