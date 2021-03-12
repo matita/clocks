@@ -49,12 +49,15 @@
 </script>
 
 <div
-  class="bg-white px-4 py-2 mb-2 relative rounded-xl transition-shadow duration-300"
+  class="px-4 py-2 mb-2 relative rounded-xl transition-shadow duration-300"
+  class:bg-white={!clock.isLocal}
   transition:slide
 >
-  <div class="text-gray-500">{clock.name || '---'}</div>
-  <div class="text-xs text-gray-400">{clock.location}</div>
-  <button class="absolute top-2 right-1 px-2" on:click={onClick}>&vellip;</button>
+  <div class="text-gray-500">{clock.isLocal ? 'Local' : clock.name || '---'}</div>
+  <div class="text-xs text-gray-400">{clock.isLocal ? 'Your position' : clock.location}</div>
+  {#if !clock.isLocal}
+    <button class="absolute top-2 right-1 px-2" on:click={onClick}>&vellip;</button>
+  {/if}
   {#if active}
     <div
       class="z-10 bg-black bg-opacity-30 fixed top-0 left-0 right-0 bottom-0 flex place-items-center"

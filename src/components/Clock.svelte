@@ -16,7 +16,17 @@
     time = formatTime(date);
   }
 
-  $: sortedClocks = zone.clocks.sort((c1, c2) => (c1.name || '').localeCompare(c2.name || ''))
+  $: sortedClocks = zone.clocks.sort((c1, c2) => {
+    if (c1.isLocal) {
+      return -1;
+    }
+
+    if (c2.isLocal) {
+      return 1;
+    }
+
+    return (c1.name || '').localeCompare(c2.name || '')
+  })
 </script>
 
 <div class="flex max-w-full" transition:slide>

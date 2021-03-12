@@ -2,14 +2,25 @@
   // import './Clocks.css';
   import Clock from './Clock.svelte';
   import clocks from '../stores/clocks';
+  import searchText from '../stores/searchText';
+
+  const localOffset = -new Date().getTimezoneOffset();
+
+  $: clocksWithLocal = $clocks.concat({ minutesOffset: localOffset, name: '', location: 'Local', isLocal: true });
 
   $: sortedZones = Object.entries(
-      $clocks.reduce((zones, clock) => {
-        const { minutesOffset } = clock;
-        const zoneClocks = zones[minutesOffset] = zones[minutesOffset] || [];
-        zoneClocks.push(clock);
-        return zones;
-      }, {})
+      clocksWithLocal
+        .filter((clock) => (
+          clock.isLocal
+          || (clock.name || '').toLowerCase().indexOf($searchText) !== -1)
+          || (clock.location || '').toLowerCase().indexOf($searchText) !== -1
+        )
+        .reduce((zones, clock) => {
+          const { minutesOffset } = clock;
+          const zoneClocks = zones[minutesOffset] = zones[minutesOffset] || [];
+          zoneClocks.push(clock);
+          return zones;
+        }, {})
     )
     .map(([minutesOffset, clocks]) => ({
       minutesOffset: +minutesOffset,
