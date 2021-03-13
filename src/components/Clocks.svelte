@@ -1,12 +1,18 @@
 <script>
   // import './Clocks.css';
   import Clock from './Clock.svelte';
-  import clocks from '../stores/clocks';
+  // import clocks from '../stores/clocks';
   import searchText from '../stores/searchText';
+
+  export let clocks = [];
+  export let showLocal = false;
+  export let showMenu = false;
 
   const localOffset = -new Date().getTimezoneOffset();
 
-  $: clocksWithLocal = $clocks.concat({ minutesOffset: localOffset, name: '', location: 'Local', isLocal: true });
+  $: clocksWithLocal = showLocal
+    ? clocks.concat({ minutesOffset: localOffset, name: '', location: 'Local', isLocal: true })
+    : clocks;
 
   $: sortedZones = Object.entries(
       clocksWithLocal
@@ -32,6 +38,6 @@
 <div class="">
   <!-- <p class="back-to-current-time">Back to current time</p> -->
   {#each sortedZones as zone (zone.minutesOffset)}
-    <Clock {zone} />
+    <Clock {zone} {showMenu} />
   {/each}
 </div>

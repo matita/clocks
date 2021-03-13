@@ -14,17 +14,9 @@
   import SearchForm from './components/SearchForm.svelte';
   import Footer from './components/Footer.svelte';
   import Clocks from './components/Clocks.svelte';
+  import AddClocks from './organisms/AddClocks.svelte';
   import { serializeClocks, deserializeClocks } from './utils';
   import clocks from './stores/clocks';
-
-  // Get clocks from URL
-  const params = new URLSearchParams(location.search.substr(1));
-  const clocksFromUrl = deserializeClocks(params.get('clocks'));
-  history.replaceState({}, 'Clocks', `?`);
-  // Wait some time to add clocks from URL, so it's more clear that they've been just added
-  setTimeout(() => {
-    clocksFromUrl.forEach(clocks.add);
-  }, 200);
 
   // Load clocks from localStorage
   try {
@@ -34,7 +26,22 @@
     // do nothing
   }
 
+  // Get clocks from URL
+  const params = new URLSearchParams(location.search.substr(1));
+  const clocksFromUrl = deserializeClocks(params.get('clocks'))
+    .filter((clock) => !clocks.has(clock));
+
+  history.replaceState({}, 'Clocks', `?`);
+  // Wait some time to add clocks from URL, so it's more clear that they've been just added
+  // setTimeout(() => {
+  //   clocksFromUrl.forEach(clocks.add);
+  // }, 200);
+
   clocks.subscribe((clocks) => localStorage['clocks_items'] = JSON.stringify(clocks.filter((c) => !c.isLocal)));
+
+  let addClocksOpen = !!clocksFromUrl.length;
+
+  $: shareAllUrl = `${location.protocol}//${location.host}${location.pathname}?clocks=${serializeClocks($clocks)}`;
 
   function onLocationSelected({ detail }) {
     clocks.add(detail);
@@ -45,8 +52,16 @@
   <div class="max-w-xl mx-auto my-4 text-gray-600">
     <SearchForm on:locationselected={onLocationSelected} />
 
-    <Clocks />
+    <div>
+      <a href={shareAllUrl} target="_blank">Share all</a>
+    </div>
+
+    <Clocks clocks={$clocks} showLocal showMenu />
   </div>
 </div>
 
 <Footer />
+
+{#if addClocksOpen}
+  <AddClocks clocks={clocksFromUrl} on:close={() => addClocksOpen = false} />
+{/if}

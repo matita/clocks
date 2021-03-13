@@ -7,6 +7,8 @@
   import ClockMenu from '../organisms/ClockMenu.svelte';
 
   export let clock;
+  export let showMenu = false;
+
   $: active = $activeClock === clock;
 
   function onClick() {
@@ -17,11 +19,11 @@
 <div
   class="px-4 py-2 mb-2 relative rounded-xl transition-shadow duration-300"
   class:bg-white={!clock.isLocal}
-  transition:slide
+  transition:slide|local
 >
   <div class="text-gray-500">{clock.isLocal ? 'Local' : clock.name || '---'}</div>
   <div class="text-xs text-gray-400">{clock.isLocal ? 'Your position' : clock.location}</div>
-  {#if !clock.isLocal}
+  {#if showMenu && !clock.isLocal}
     <button class="absolute top-2 right-1 px-2" on:click={onClick}>&vellip;</button>
   {/if}
   {#if active}

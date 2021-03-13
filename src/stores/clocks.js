@@ -1,23 +1,25 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 
-const { subscribe, update } = writable([])
+const store = writable([])
+const { subscribe, update } = store
 let id = 1;
+
+const has = (clocks, { location, minutesOffset, name }) => clocks.some((clock) => (
+  clock.location === location
+    && clock.minutesOffset === minutesOffset
+    && clock.name === name
+))
 
 export default {
   subscribe,
-  add: ({ location, minutesOffset, name }) => update((clocks) => {
-    if (clocks.some((clock) => (
-      clock.location === location
-        && clock.minutesOffset === minutesOffset
-        && clock.name === name
-    ))) {
+  has: (clock) => has(get(store), clock),
+  add: (clock) => update((clocks) => {
+    if (has(clocks, clock)) {
       return clocks;
     }
 
     return clocks.concat({
-      location,
-      minutesOffset,
-      name,
+      ...clock,
       id: id++,
     });
   }),

@@ -16,9 +16,10 @@ export const serializeClocks = (clocks) => clocks
 export const deserializeClocks = (clocksStr) => (clocksStr || '')
   .split('|')
   .filter((p) => !!p) // discard empty strings
-  .map((part) => {
+  .map((part, i) => {
     const [ location, minutesOffset, name ] = part.split(';').map(decodeURIComponent);
     return {
+      id: `shared-${i + 1}`,
       location,
       name,
       minutesOffset: +minutesOffset,

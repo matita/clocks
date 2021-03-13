@@ -4,6 +4,8 @@
   import SubClock from './SubClock.svelte';
 
   export let zone;
+  export let showMenu = false;
+
   let time;
 
   const date = new Date()
@@ -29,7 +31,7 @@
   })
 </script>
 
-<div class="flex max-w-full" transition:slide>
+<div class="flex max-w-full" transition:slide|local>
   <div class="flex-none relative w-24">
     <div class="text-center py-2 px-2 sticky top-0">
       <span class:text-primary-600={isCurrentTimezone}>{time}</span>
@@ -43,7 +45,7 @@
   </div>
   <div class="flex-1">
     {#each sortedClocks as clock (clock.id)}
-      <SubClock {clock} />
+      <SubClock {clock} {showMenu} />
     {/each}
   </div>
 </div>
