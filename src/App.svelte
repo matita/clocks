@@ -41,8 +41,6 @@
 
   let addClocksOpen = !!clocksFromUrl.length;
 
-  $: shareAllUrl = `${location.protocol}//${location.host}${location.pathname}?clocks=${serializeClocks($clocks)}`;
-
   function onLocationSelected({ detail }) {
     clocks.add(detail);
   }
@@ -51,10 +49,6 @@
 <div class="flex-grow">
   <div class="max-w-xl mx-auto my-4 text-gray-600">
     <SearchForm on:locationselected={onLocationSelected} />
-
-    <div>
-      <a href={shareAllUrl} target="_blank">Share all</a>
-    </div>
 
     <Clocks clocks={$clocks} showLocal showMenu />
   </div>
