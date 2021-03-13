@@ -18,14 +18,21 @@
       return;
     }
 
+    console.log('place', place);
+
+    const addressComponents = place.address_components;
+    const country = addressComponents.find((p) => p.types.indexOf('country') != -1)?.long_name;
+    const region = addressComponents.find((p) => p.types.indexOf('administrative_area_level_1') != -1)?.long_name;
+    const locality = addressComponents.find((p) => p.types.indexOf('locality') != -1)?.long_name;
+    const location = [locality || region, country].filter((n) => !!n).join(', ') || place.formatted_address;
+
     const coordinates = place.geometry.location;
 
     const data = {
-      location: place.formatted_address,
-      lat: coordinates.lat(),
-      lng: coordinates.lng(),
+      location,
       minutesOffset: place.utc_offset_minutes,
-    }
+      coords: `${coordinates.lat()};${coordinates.lng()}`,
+    };
     input.value = '';
     dispatch('locationselected', data);
     searchText.reset();
@@ -34,7 +41,7 @@
   async function onInput(ev) {
     ev.preventDefault();
     const text = ev.target.value;
-    searchText.search(text);
+    // searchText.search(text);
 
     if (!autocompletePromise) {
       autocompletePromise = autocomplete(input);
