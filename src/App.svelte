@@ -17,6 +17,8 @@
   import AddClocks from './organisms/AddClocks.svelte';
   import { serializeClocks, deserializeClocks } from './utils';
   import clocks from './stores/clocks';
+  import clocksToAdd from './stores/clocksToAdd';
+  import Button from './atoms/Button.svelte';
 
   // Load clocks from localStorage
   try {
@@ -30,6 +32,7 @@
   const params = new URLSearchParams(location.search.substr(1));
   const clocksFromUrl = deserializeClocks(params.get('clocks'))
     .filter((clock) => !clocks.has(clock));
+  clocksFromUrl.forEach((clock) => clocksToAdd.add(clock));
 
   history.replaceState({}, 'Clocks', `?`);
   // Wait some time to add clocks from URL, so it's more clear that they've been just added
@@ -39,16 +42,22 @@
 
   clocks.subscribe((clocks) => localStorage['clocks_items'] = JSON.stringify(clocks.filter((c) => !c.isLocal)));
 
-  let addClocksOpen = !!clocksFromUrl.length;
+  $: addClocksOpen = $clocksToAdd.length;
 
   function onLocationSelected({ detail }) {
-    clocks.add(detail);
+    clocksToAdd.add(detail);
+  }
+
+  function onAddClockClick() {
+    addClocksOpen = true;
   }
 </script>
 
 <div class="flex-grow">
-  <div class="max-w-xl mx-auto my-4 text-gray-600">
-    <SearchForm on:locationselected={onLocationSelected} />
+  <div class="max-w-xl mx-auto my-4 text-gray-600 text-center">
+    <SearchForm />
+
+    <Button class="my-4" primary on:click={onAddClockClick}>Add clock</Button>
 
     <Clocks clocks={$clocks} showLocal showMenu />
   </div>
@@ -57,5 +66,5 @@
 <Footer />
 
 {#if addClocksOpen}
-  <AddClocks clocks={clocksFromUrl} on:close={() => addClocksOpen = false} />
+  <AddClocks on:close={() => addClocksOpen = false} on:locationselected={onLocationSelected} />
 {/if}

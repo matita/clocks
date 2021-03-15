@@ -35,7 +35,7 @@
     .sort((c1, c2) => c1.minutesOffset - c2.minutesOffset);
 </script>
 
-<div class="">
+<div class="text-left">
   <!-- <p class="back-to-current-time">Back to current time</p> -->
   {#each sortedZones as zone (zone.minutesOffset)}
     <Clock {zone} {showMenu} />

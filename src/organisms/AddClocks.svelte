@@ -5,26 +5,30 @@
   import ModalBody from '../atoms/ModalBody.svelte';
   import ModalButtons from '../atoms/ModalButtons.svelte';
   import Button from '../atoms/Button.svelte';
-  import clocksStore from '../stores/clocks';
-
-  export let clocks = [];
+  import clocks from '../stores/clocksToAdd';
+  import SearchForm from '../components/SearchForm.svelte';
 
   const dispatch = createEventDispatcher();
   const close = () => dispatch('close');
 
   function onSaveAll() {
-    clocks.forEach(clocksStore.add);
+    clocks.saveAll();
     close();
   }
 
   function onClose() {
     close();
   }
+
+  function onLocationSelected({ detail }) {
+    clocks.add(detail);
+  }
 </script>
 
 <Modal>
   <ModalBody>
-    <Clocks {clocks} />
+    <SearchForm withGmaps on:locationselected={onLocationSelected} />
+    <Clocks clocks={$clocks} />
   </ModalBody>
 
   <ModalButtons>

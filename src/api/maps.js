@@ -8,6 +8,7 @@ function embedSdk() {
       return resolve();
     }
 
+    sdkEmbedded = true;
     const s = document.createElement('script');
     s.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=3&libraries=places`;
     s.onload = resolve;

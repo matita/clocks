@@ -3,12 +3,18 @@
   import { autocomplete } from '../api/maps';
   import searchText from '../stores/searchText';
 
+  export let withGmaps = false;
+
   let input;
   let autocompletePromise;
   let gmapAutocomplete;
   const dispatch = createEventDispatcher();
 
   onMount(async () => {
+    if (withGmaps) {
+      gmapAutocomplete = await autocomplete(input);
+      gmapAutocomplete.addListener('place_changed', onPlaceSelected);
+    }
     input.focus();
   });
 
@@ -17,8 +23,6 @@
     if (!place || !place.geometry) {
       return;
     }
-
-    console.log('place', place);
 
     const addressComponents = place.address_components;
     const country = addressComponents.find((p) => p.types.indexOf('country') != -1)?.long_name;
@@ -41,12 +45,8 @@
   async function onInput(ev) {
     ev.preventDefault();
     const text = ev.target.value;
-    // searchText.search(text);
-
-    if (!autocompletePromise) {
-      autocompletePromise = autocomplete(input);
-      gmapAutocomplete = await autocompletePromise;
-      gmapAutocomplete.addListener('place_changed', onPlaceSelected);
+    if (!withGmaps) {
+      searchText.search(text);
     }
   }
 </script>
