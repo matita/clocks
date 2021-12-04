@@ -2,6 +2,7 @@
   import { slide } from 'svelte/transition';
   import { timeMs } from '../stores/time';
   import Clock from './Clock.svelte';
+  import Time from './Time.svelte';
 
   export let zone;
   export let showMenu = false;
@@ -32,16 +33,8 @@
 </script>
 
 <div class="flex max-w-full" transition:slide|local>
-  <div class="flex-none relative w-24">
-    <div class="text-center py-2 px-2 sticky top-0">
-      <span class:text-primary-600={isCurrentTimezone}>{time}</span>
-      <div
-        class="text-xs text-gray-400"
-        class:text-primary-500={isCurrentTimezone}
-      >
-        GMT{timezone >= 0 ? `+${timezone}` : timezone}
-      </div>
-    </div>
+  <div class="flex-none relative w-24 text-center py-2 px-2">
+    <Time class="sticky top-0" {time} {isCurrentTimezone} {timezone} />
   </div>
   <div class="flex-1">
     {#each sortedClocks as clock (clock.id)}
