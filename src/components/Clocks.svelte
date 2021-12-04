@@ -1,6 +1,6 @@
 <script>
   // import './Clocks.css';
-  import Clock from './Clock.svelte';
+  import Timezone from './Timezone.svelte';
   // import clocks from '../stores/clocks';
   import searchText from '../stores/searchText';
 
@@ -38,6 +38,6 @@
 <div class="text-left">
   <!-- <p class="back-to-current-time">Back to current time</p> -->
   {#each sortedZones as zone (zone.minutesOffset)}
-    <Clock {zone} {showMenu} />
+    <Timezone {zone} {showMenu} />
   {/each}
 </div>
