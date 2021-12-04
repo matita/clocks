@@ -7,16 +7,13 @@
   export let zone;
   export let showMenu = false;
 
-  let time;
-
   const date = new Date()
   const timezone = ('minutesOffset' in zone ? zone.minutesOffset : -date.getTimezoneOffset()) / 60;
-  const formatTime = (d) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const isCurrentTimezone = zone.minutesOffset === -date.getTimezoneOffset();
 
   $: {
     date.setTime($timeMs + ((zone.minutesOffset || 0) + (zone.isLocal ? 0 : date.getTimezoneOffset())) * 60 * 1000);
-    time = formatTime(date);
+    date = date;
   }
 
   $: sortedClocks = zone.clocks.sort((c1, c2) => {
@@ -34,7 +31,7 @@
 
 <div class="flex max-w-full" transition:slide|local>
   <div class="flex-none relative w-24 text-center py-2 px-2">
-    <Time class="sticky top-0" {time} {isCurrentTimezone} {timezone} />
+    <Time class="sticky top-0" {date} {isCurrentTimezone} {timezone} />
   </div>
   <div class="flex-1">
     {#each sortedClocks as clock (clock.id)}
