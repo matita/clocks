@@ -2,17 +2,16 @@
   import searchText from '../stores/searchText'
   import { timeMs } from '../stores/time';
 
-  let className;
+  const date = new Date()
+
+  let className = void 0;
   export { className as class };
-  export let minutesOffset
+  export let minutesOffset = -date.getTimezoneOffset()
 
   const formatTime = (d) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  const timezone = minutesOffset / 60
-  const timezoneLabel = `GMT${timezone >= 0 ? `+${timezone}` : timezone}`
-  
-  const date = new Date()
-  const isCurrentTimezone = minutesOffset === -date.getTimezoneOffset()
-
+  $: timezone = minutesOffset / 60
+  $: timezoneLabel = `GMT${timezone >= 0 ? `+${timezone}` : timezone}`
+  $: isCurrentTimezone = minutesOffset === -date.getTimezoneOffset()
   $: {
     date.setTime($timeMs + ((minutesOffset || 0) + (date.getTimezoneOffset())) * 60 * 1000);
     date = date;

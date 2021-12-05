@@ -1,6 +1,7 @@
 <script>
-  import Overlay from '../atoms/Overlay.svelte'
   import ClockEdit from './ClockEdit.svelte'
+  import Modal from '../atoms/Modal.svelte'
+  import ModalBody from '../atoms/ModalBody.svelte'
 
   import clocks from '../stores/clocks'
   import { activeClock } from '../stores/activeClock'
@@ -10,8 +11,15 @@
   }
 
   function onSave(e) {
-    const { name } = e.detail
-    clocks.rename($activeClock, name)
+    const { name, ...props } = e.detail
+    if ($activeClock.id === 'new') {
+      clocks.add({
+        name,
+        ...props,
+      })
+    } else {
+      clocks.rename($activeClock, name)
+    }
     $activeClock = null
   }
 
@@ -24,14 +32,14 @@
 </script>
 
 {#if $activeClock}
-  <Overlay>
-    <div class="bg-white w-2/3 max-w-xl p-4 mx-auto rounded-md">
+  <Modal>
+    <ModalBody>
       <ClockEdit 
         clock={$activeClock} 
         on:cancel={onCancel}
         on:save={onSave}
         on:delete={onDelete}
       />
-    </div>
-  </Overlay>
+    </ModalBody>
+  </Modal>
 {/if}
