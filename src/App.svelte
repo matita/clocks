@@ -57,7 +57,11 @@
   <div class="max-w-xl mx-auto my-4 text-gray-600 text-center">
     <SearchForm />
 
-    <Button class="my-4" primary on:click={onAddClockClick}>Add clock</Button>
+    <Button class="my-4 rounded-full" primary on:click={onAddClockClick}>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+    </Button>
 
     <Clocks clocks={$clocks} showLocal showMenu />
   </div>

@@ -16,7 +16,7 @@
   }
 </script>
 
-<div class={className} on:click={onClick}>
+<div class={`cursor-pointer ${className}`} on:click={onClick}>
   <span class:text-primary-600={isCurrentTimezone}>{formatTime(date)}</span>
   <div
     class="text-xs text-gray-400"
