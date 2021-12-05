@@ -1,6 +1,8 @@
 <script>
   import { createEventDispatcher, onMount } from 'svelte'
 
+  import Time from './Time.svelte'
+
   export let clock
 
   let location = (clock && clock.location) || ''
@@ -43,36 +45,41 @@
 </script>
 
 <div class="text-gray-400" on:keydown={onKeyDown}>
-  <div class="flex place-items-center my-4">
-    <label for="clock-location" class="flex-none">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    </label>
-    <input
-      id="clock-location"
-      class="mx-2 p-2 flex-grow border border-gray-400 text-gray-500 focus:outline-none ring-primary-500 rounded-lg"
-      class:focus:ring-1={!clock}
-      class:border={!clock}
-      type="search"
-      placeholder="some area"
-      readonly={!!clock}
-      bind:this={locationInput}
-      bind:value={location}>
-  </div>
+  <div class="flex items-center">
+    <Time minutesOffset={clock?.minutesOffset} />
+    <div class="flex-grow ml-4">
+      <div class="flex place-items-center my-4">
+        <label for="clock-location" class="flex-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </label>
+        <input
+          id="clock-location"
+          class="mx-2 p-2 flex-grow border border-gray-400 text-gray-500 focus:outline-none ring-primary-500 rounded-lg"
+          class:focus:ring-1={!clock}
+          class:border={!clock}
+          type="search"
+          placeholder="some area"
+          readonly={!!clock}
+          bind:this={locationInput}
+          bind:value={location}>
+      </div>
 
-  <div class="flex place-items-center my-4">
-    <label for="clock-name" class="flex-none">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    </label>
-    <input
-      id="clock-name"
-      class="mx-2 p-2 flex-grow border border-gray-400 text-gray-500 focus:outline-none focus:ring-1 ring-primary-500 rounded-lg"
-      bind:this={nameInput}
-      bind:value={name}>
+      <div class="flex place-items-center my-4">
+        <label for="clock-name" class="flex-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </label>
+        <input
+          id="clock-name"
+          class="mx-2 p-2 flex-grow border border-gray-400 text-gray-500 focus:outline-none focus:ring-1 ring-primary-500 rounded-lg"
+          bind:this={nameInput}
+          bind:value={name}>
+      </div>
+    </div>
   </div>
 
   <div class="flex my-4">

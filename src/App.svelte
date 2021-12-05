@@ -15,7 +15,8 @@
   import Footer from './components/Footer.svelte';
   import Clocks from './components/Clocks.svelte';
   import AddClocks from './organisms/AddClocks.svelte';
-  import { serializeClocks, deserializeClocks } from './utils';
+  import ClockEditModal from './components/ClockEditModal.svelte';
+  import { deserializeClocks } from './utils';
   import clocks from './stores/clocks';
   import clocksToAdd from './stores/clocksToAdd';
   import Button from './atoms/Button.svelte';
@@ -72,3 +73,5 @@
 {#if addClocksOpen}
   <AddClocks on:close={() => addClocksOpen = false} on:locationselected={onLocationSelected} />
 {/if}
+
+<ClockEditModal />
