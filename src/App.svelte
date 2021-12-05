@@ -63,7 +63,7 @@
       </svg>
     </Button>
 
-    <Clocks clocks={$clocks} showLocal showMenu />
+    <Clocks clocks={$clocks} showLocal />
   </div>
 </div>
 

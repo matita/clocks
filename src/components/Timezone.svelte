@@ -5,7 +5,6 @@
   import Time from './Time.svelte';
 
   export let zone;
-  export let showMenu = false;
 
   const date = new Date()
   const timezone = ('minutesOffset' in zone ? zone.minutesOffset : -date.getTimezoneOffset()) / 60;
@@ -35,7 +34,7 @@
   </div>
   <div class="flex-1">
     {#each sortedClocks as clock (clock.id)}
-      <Clock {clock} {showMenu} />
+      <Clock {clock} />
     {/each}
   </div>
 </div>

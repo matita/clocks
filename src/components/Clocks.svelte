@@ -6,7 +6,6 @@
 
   export let clocks = [];
   export let showLocal = false;
-  export let showMenu = false;
 
   const localOffset = -new Date().getTimezoneOffset();
 
@@ -38,6 +37,6 @@
 <div class="text-left">
   <!-- <p class="back-to-current-time">Back to current time</p> -->
   {#each sortedZones as zone (zone.minutesOffset)}
-    <Timezone {zone} {showMenu} />
+    <Timezone {zone} />
   {/each}
 </div>
