@@ -17,7 +17,7 @@
 </script>
 
 <div
-  class="px-4 py-2 mb-2 relative rounded-xl transition-shadow duration-300"
+  class="px-6 py-2 mb-2 relative rounded-full"
   class:bg-white={!clock.isLocal}
   transition:slide|local
 >

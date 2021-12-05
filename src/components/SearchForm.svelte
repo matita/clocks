@@ -65,7 +65,7 @@
   }
 </script>
 
-<div class="sticky top-4 z-10 flex place-items-center rounded-xl bg-white px-4 py-2 my-4 shadow-lg">
+<div class="sticky top-4 z-10 flex place-items-center rounded-full bg-white pl-4 py-2 my-4 shadow-lg">
   <label for="search-text" class="flex-none whitespace-nowrap">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -73,7 +73,7 @@
   </label>
   <input
     bind:this={input}
-    class="mx-2 px-1 py-2 w-1 flex-grow focus:outline-none focus:ring-1 ring-primary-500 rounded-sm"
+    class="mx-2 px-4 py-2 flex-grow focus:outline-none focus:ring-1 ring-primary-500 rounded-full"
     id="search-text"
     type="search"
     placeholder="some city"
