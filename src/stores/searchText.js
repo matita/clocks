@@ -1,11 +1,10 @@
 import { writable } from 'svelte/store'
 import { parseTime } from './time'
 
-const { subscribe, update } = writable('')
-const search = (text) => {
-  if (!parseTime(text)) {
-    update(() => text.trim().toLowerCase())
-  }
+const { subscribe, update } = writable({ rawText: '', searchText: '' })
+const search = (rawText) => {
+  const searchText = parseTime(rawText) ? '' : rawText.trim().toLowerCase()
+  update(() => ({ rawText, searchText }))
 }
 
 export default {

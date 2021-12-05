@@ -18,8 +18,8 @@
       clocksWithLocal
         .filter((clock) => (
           clock.isLocal
-          || (clock.name || '').toLowerCase().indexOf($searchText) !== -1)
-          || (clock.location || '').toLowerCase().indexOf($searchText) !== -1
+          || (clock.name || '').toLowerCase().indexOf($searchText.searchText) !== -1)
+          || (clock.location || '').toLowerCase().indexOf($searchText.searchText) !== -1
         )
         .reduce((zones, clock) => {
           const { minutesOffset } = clock;

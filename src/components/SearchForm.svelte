@@ -49,6 +49,20 @@
       searchText.search(text);
     }
   }
+
+  $: {
+    if ($searchText.rawText && input !== document.activeElement) {
+      setTimeout(() => {
+        input.focus()
+
+        const timeMatch = $searchText.rawText.match(/\d{1,2}:\d{1,2}/)
+        if (timeMatch) {
+          input.setSelectionRange(0, timeMatch[0].length)
+        }
+
+      }, 100);
+    }
+  }
 </script>
 
 <div class="flex place-items-center rounded-xl bg-white px-4 py-2 my-4">
@@ -59,5 +73,6 @@
     id="search-text"
     type="search"
     placeholder="some city"
+    value={$searchText.rawText}
     on:input={onInput} >
 </div>
