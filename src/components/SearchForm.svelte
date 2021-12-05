@@ -78,7 +78,6 @@
     class="mx-2 px-4 py-2 flex-grow focus:outline-none focus:ring-1 ring-primary-500 rounded-full"
     id="search-text"
     type="search"
-    placeholder="some city"
     value={$searchText.rawText}
     on:input={onInput} >
 </div>
