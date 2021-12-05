@@ -56,9 +56,10 @@
 
 <div class="flex-grow">
   <div class="max-w-xl mx-auto my-4 text-gray-600 text-center">
-    <SearchForm />
-
-    <CreateClockBtn />
+    <div class="flex items-center">
+      <SearchForm class="flex-grow" />
+      <CreateClockBtn />
+    </div>
 
     <Clocks clocks={$clocks} showLocal />
   </div>
