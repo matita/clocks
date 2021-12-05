@@ -17,11 +17,11 @@
 </script>
 
 <div class={`cursor-pointer ${className}`} on:click={onClick}>
-  <span class:text-primary-600={isCurrentTimezone}>{formatTime(date)}</span>
   <div
     class="text-xs text-gray-400"
     class:text-primary-500={isCurrentTimezone}
   >
     {timezoneLabel}
   </div>
+  <span class:text-primary-600={isCurrentTimezone}>{formatTime(date)}</span>
 </div>

@@ -31,7 +31,7 @@
 
 <div class="flex max-w-full" transition:slide|local>
   <div class="flex-none relative w-24 text-center py-2 px-2">
-    <Time class="sticky top-0" {date} {isCurrentTimezone} {timezone} />
+    <Time class="sticky top-24" {date} {isCurrentTimezone} {timezone} />
   </div>
   <div class="flex-1">
     {#each sortedClocks as clock (clock.id)}

@@ -21,8 +21,11 @@
   class:bg-white={!clock.isLocal}
   transition:slide|local
 >
-  <div class="text-gray-500">{clock.isLocal ? 'Local' : clock.name || '---'}</div>
-  <div class="text-xs text-gray-400">{clock.isLocal ? 'Your position' : clock.location}</div>
+  {#if clock.name || clock.isLocal}
+    <div class="text-xs text-gray-400">{clock.isLocal ? 'Your position' : clock.location}</div>
+  {/if}
+  <div class="text-gray-500">{clock.isLocal ? 'Local' : clock.name || clock.location}</div>
+
   {#if showMenu && !clock.isLocal}
     <button class="absolute top-2 right-1 px-2" on:click={onClick}>&vellip;</button>
   {/if}
